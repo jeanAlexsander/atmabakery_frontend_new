@@ -1,0 +1,57 @@
+
+.login-background {
+  background-image: url('./assets/bg1.png'); 
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form_container {
+  background: rgba(255, 255, 255, 0.8); /* Transparansi untuk efek blur */
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px; /* Atur lebar sesuai kebutuhan */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Menambahkan sedikit bayangan */
+}
+
+.form-control {
+  margin-bottom: 10px; /* Spasi antar elemen form */
+}
+
+.btn-primary {
+  background-color: #007bff; /* Warna biru bootstrap */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Warna saat hover */
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+a {
+  color: #007bff;
+}
+
+a:hover {
+  color: #0056b3;
+}
