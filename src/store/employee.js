@@ -171,4 +171,4 @@ export const updateEmployeeData = (data) => {
 
 export const { showAddEmployeeModal, hideAddEmployeeModal, hideUpdateEmployeeModal, showUpdateEmployeeModal, hideDeleteEmployeeModal, showDeleteEmployeeModal, setEmployeeData, setDeleteId, setRole, setEditEmployeeData } = employeeSlice.actions;
 
-export default employeeSlice;
+// export default employeeSlice;

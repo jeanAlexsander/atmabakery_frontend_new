@@ -12,7 +12,7 @@ import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 
-const MOSideBar = () => {
+const OwnerSideBar = () => {
   return (
     <div
       style={{ display: "flex", height: "100vh", overflow: "scroll initial" }}
@@ -44,7 +44,7 @@ const MOSideBar = () => {
             </NavLink>
             <NavLink exact to="/analytics" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="chart-line">
-                Recipe
+                Analytics
               </CDBSidebarMenuItem>
             </NavLink>
 
@@ -55,7 +55,7 @@ const MOSideBar = () => {
               activeClassName="activeClicked"
             >
               <CDBSidebarMenuItem icon="exclamation-circle">
-                Ingredient
+                404 page
               </CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>
@@ -78,4 +78,4 @@ const MOSideBar = () => {
   );
 };
 
-export default MOSideBar;
+export default OwnerSideBar;

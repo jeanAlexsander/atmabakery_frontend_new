@@ -12,7 +12,7 @@ import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 
-const MOSideBar = () => {
+const AdminSideBar = () => {
   return (
     <div
       style={{ display: "flex", height: "100vh", overflow: "scroll initial" }}
@@ -24,7 +24,7 @@ const MOSideBar = () => {
             className="text-decoration-none"
             style={{ color: "inherit" }}
           >
-            Owner
+            Admin
           </a>
         </CDBSidebarHeader>
 
@@ -78,4 +78,4 @@ const MOSideBar = () => {
   );
 };
 
-export default MOSideBar;
+export default AdminSideBar;
