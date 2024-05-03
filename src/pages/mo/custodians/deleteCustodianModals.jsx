@@ -2,23 +2,16 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  hideDeleteEmployeeModal,
-  deleteEmployeeData,
-} from "../../../store/employee";
+import { hideDeleteCustodianModal } from "../../../store/custodian";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function ModalAddEmployees() {
-  const show = useSelector((state) => state.employeeStore.deleteEmployeeModal);
-  const deleteId = useSelector((state) => state.employeeStore.deleteId);
+function ModalAddCustodian() {
+  const show = useSelector((state) => state.custodianStore.deleteCustodianModal);
 
   const dispatch = useDispatch();
 
   const handleClose = () => {
-    dispatch(hideDeleteEmployeeModal());
-  };
-  const handleDelete = () => {
-    dispatch(deleteEmployeeData(deleteId));
+    dispatch(hideDeleteCustodianModal());
   };
 
   return (
@@ -31,13 +24,7 @@ function ModalAddEmployees() {
           <Button variant="danger" onClick={handleClose}>
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              handleDelete();
-              handleClose();
-            }}
-          >
+          <Button variant="primary" onClick={handleClose}>
             Delete
           </Button>
         </Modal.Footer>
@@ -46,4 +33,4 @@ function ModalAddEmployees() {
   );
 }
 
-export default ModalAddEmployees;
+export default ModalAddCustodian;

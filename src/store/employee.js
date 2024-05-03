@@ -1,29 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-const Employee = [
-    {
-      id: 1,
-      first_name: "John",
-      last_name: "Doe",
-      email: "john@gmail.com",
-      role_name: "Manager",
-    },
-    {
-      id: 2,
-      first_name: "Jane",
-      last_name: "Doe",
-      email: "jane@gmail.com",
-      role_name: "Staff",
-    },
-    {
-      id: 3,
-      first_name: "James",
-      last_name: "Doe",
-      email: "james@gmail.com",
-      role_name: "Staff",
-    },
-  ];
-
+import { URL } from "../../constants";
 
 const employeeSlice = createSlice({
     name: "employeeStore",
@@ -31,7 +7,10 @@ const employeeSlice = createSlice({
         addEmployeeModal: false,
         updateEmployeeModal: false,
         deleteEmployeeModal: false,
-        employeeData: [...Employee]
+        employeeData: [],
+        deleteId: null,
+        role:[],
+        editEmployeeData: {}
     },
     reducers: {
         showAddEmployeeModal: (state) => {
@@ -51,10 +30,145 @@ const employeeSlice = createSlice({
         },
         hideDeleteEmployeeModal: (state) => {
             state.deleteEmployeeModal = false;
+        },
+        setEmployeeData: (state, action) => {
+            state.employeeData = [...action.payload.data];
+        },
+        setDeleteId: (state, action) => {
+            state.deleteId = action.payload.id;
+        },
+        setRole: (state, action) => {
+            state.role = [...action.payload.role];
+        },
+        setEditEmployeeData: (state, action) => {
+            console.log(action.payload.employee);
+            state.editEmployeeData = action.payload.employee;
         }
     }
 })
 
-export const { showAddEmployeeModal, hideAddEmployeeModal, hideUpdateEmployeeModal, showUpdateEmployeeModal, hideDeleteEmployeeModal, showDeleteEmployeeModal } = employeeSlice.actions;
+
+export const fetchEmployeeData = () => {
+    return async (dispatch) => {
+        async function fetchDataDatabase() {
+            const response = await fetch(`${URL}get-employees`)
+            if (!response.ok) {
+                throw new Error("Something went wrong!");
+            }
+            const data = await response.json();
+            return data.data;        
+        }
+
+        try {
+            const data = await fetchDataDatabase();
+            dispatch(setEmployeeData({ data }));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+};
+
+
+
+
+export const deleteEmployeeData = (id) => {
+    return async (dispatch) => {
+        async function deleteDataDatabase() {
+            const response = await fetch(`${URL}delete-employee/${id}`, {
+                method: "DELETE",
+            });
+            if (!response.ok) {
+                throw new Error("Something went wrong!");
+            }
+            const data = await response.json();
+            return data;
+        }
+
+        try {
+            await deleteDataDatabase();
+            dispatch(fetchEmployeeData());
+        } catch (error) {
+            console.log(error);
+        }
+    };
+}
+
+export const fetchRoleData = () => {
+    return async (dispatch) => {
+        async function fetchDataDatabase() {
+            const response = await fetch(`${URL}get-role`)
+            if (!response.ok) {
+                throw new Error("Something went wrong!");
+            }
+            const data = await response.json();
+            return data.data;        
+        }
+
+        try {
+            const data = await fetchDataDatabase();
+            dispatch(setRole({ role: data }));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+};
+
+export const addEmployeeData = (data) => {
+    const inputData = data
+    return async (dispatch) => {
+        async function addDataDatabase() {
+            const response = await fetch(`${URL}add-employee`, {
+                method: "POST",
+                body: JSON.stringify(inputData),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (!response.ok) {
+                throw new Error("Something went wrong!");
+            }
+            const data = await response.json();
+            return data;
+        }
+
+        try {
+            await addDataDatabase();
+            dispatch(fetchEmployeeData());
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+}
+
+export const updateEmployeeData = (data) => {
+    const inputData = data
+    return async (dispatch) => {
+        async function updateDataDatabase() {
+            const response = await fetch(`${URL}update-employee/${inputData.user_id}`, {
+                method: "PUT",
+                body: JSON.stringify(inputData),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (!response.ok) {
+                throw new Error("Something went wrong!");
+            }
+            const data = await response.json();
+            return data;
+        }
+
+        try {
+            await updateDataDatabase();
+            dispatch(fetchEmployeeData());
+        } catch (error) {
+            console.log(error);
+        }
+    };
+}
+
+
+export const { showAddEmployeeModal, hideAddEmployeeModal, hideUpdateEmployeeModal, showUpdateEmployeeModal, hideDeleteEmployeeModal, showDeleteEmployeeModal, setEmployeeData, setDeleteId, setRole, setEditEmployeeData } = employeeSlice.actions;
 
 export default employeeSlice;

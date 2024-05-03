@@ -1,46 +1,66 @@
-import MOSideBar from "../component/side_nav_bar";
-import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useRef } from "react";
-import ModalAddEmployees from "./addEmployeeModals";
-import ModalUpdateEmployees from "./updateEmployeeModals";
-import ModalDeleteEmployees from "./deleteEmployeeModals";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   showAddEmployeeModal,
   showUpdateEmployeeModal,
   showDeleteEmployeeModal,
+  fetchEmployeeData,
+  setDeleteId,
+  setEditEmployeeData,
 } from "../../../store/employee";
+import { Button } from "react-bootstrap";
+import MOSideBar from "../component/side_nav_bar";
+import ModalAddEmployees from "./addEmployeeModals";
+import ModalUpdateEmployees from "./updateEmployeeModals";
+import ModalDeleteEmployees from "./deleteEmployeeModals";
 
 const EmployeeView = () => {
   const initValue = useSelector((state) => state.employeeStore.employeeData);
-  const [employees, setEmployees] = useState([...initValue]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
-  const filterEmployee = (cek) => {
-    var lowerCek = cek.toLowerCase();
-    var temp = initValue.filter(
+  useEffect(() => {
+    dispatch(fetchEmployeeData());
+  }, [dispatch]);
+
+  const handleOpenModal = () => {
+    dispatch(showAddEmployeeModal());
+  };
+
+  const handleOpenModalUpdate = (employee) => {
+    dispatch(setEditEmployeeData(employee));
+    dispatch(showUpdateEmployeeModal());
+  };
+
+  const handleOpenModalDelete = (id) => {
+    dispatch(setDeleteId({ id }));
+    dispatch(showDeleteEmployeeModal());
+  };
+
+  const handleSearch = () => {
+    const lowerCek = searchTerm.toLowerCase();
+    const temp = initValue.filter(
       (e) =>
         e.first_name.toLowerCase().includes(lowerCek) ||
         e.last_name.toLowerCase().includes(lowerCek) ||
         e.email.toLowerCase().includes(lowerCek) ||
         e.role_name.toLowerCase().includes(lowerCek)
     );
-    setEmployees(temp);
+    setFilteredEmployees(temp);
   };
 
-  const handleOpenModal = () => {
-    dispatch(showAddEmployeeModal());
-  };
-  const handleOpenModalUpdate = () => {
-    dispatch(showUpdateEmployeeModal());
-  };
-  const handleOpenModalDelete = () => {
+  const handleDelete = (id) => {
+    dispatch(setDeleteId({ id }));
     dispatch(showDeleteEmployeeModal());
   };
+
+  const handleUpdate = (employee) => {
+    dispatch(setEditEmployeeData({ employee }));
+    dispatch(showUpdateEmployeeModal());
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <MOSideBar />
@@ -74,24 +94,18 @@ const EmployeeView = () => {
               placeholder="Search..."
               style={{ width: "300px", marginRight: "10px" }}
               ref={searchRef}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Button
-              variant="danger"
-              className="mb-2"
-              onClick={() => {
-                filterEmployee(String(searchRef.current.value));
-              }}
-            >
+            <Button variant="danger" className="mb-2" onClick={handleSearch}>
               Search
             </Button>
           </div>
         </div>
         <Button
-          onClick={() => {
-            handleOpenModal();
-          }}
+          onClick={handleOpenModal}
           variant="success"
-          className="mt-3 "
+          className="mt-3"
           style={{ marginLeft: "20px" }}
         >
           + Add Employee
@@ -106,7 +120,6 @@ const EmployeeView = () => {
                 Data Employee
               </h2>
             </div>
-
             <table className="table">
               <thead>
                 <tr>
@@ -118,39 +131,31 @@ const EmployeeView = () => {
                 </tr>
               </thead>
               <tbody>
-                {employees.map((e) => {
-                  return (
-                    <tr key={e.id}>
-                      <td>{e.id}</td>
-                      <td>
-                        {e.first_name} {e.last_name}
-                      </td>
-                      <td>{e.email}</td>
-                      <td>{e.role_name}</td>
-                      <td>
-                        <Button
-                          variant="primary"
-                          className="me-2"
-                          onClick={() => {
-                            handleOpenModalUpdate();
-                          }}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="danger"
-                          onClick={() => {
-                            {
-                              handleOpenModalDelete();
-                            }
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {(searchTerm ? filteredEmployees : initValue).map((e) => (
+                  <tr key={e.user_id}>
+                    <td>{e.user_id}</td>
+                    <td>
+                      {e.first_name} {e.last_name}
+                    </td>
+                    <td>{e.email}</td>
+                    <td>{e.role_name}</td>
+                    <td>
+                      <Button
+                        variant="primary"
+                        className="me-2"
+                        onClick={() => handleUpdate(e)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={() => handleDelete(e.user_id)}
+                      >
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
