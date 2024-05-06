@@ -24,7 +24,7 @@ const MOSideBar = () => {
             className="text-decoration-none"
             style={{ color: "inherit" }}
           >
-            Owner
+            Manajer Operasional
           </a>
         </CDBSidebarHeader>
 

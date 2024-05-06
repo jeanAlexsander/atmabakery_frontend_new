@@ -6,43 +6,25 @@ const YourOrders = () => {
             id: 112345,
             date: '12/12/2021',
             status: 'Delivered',
-            total: 1000
-        },
-        {
-            id: 112346,
-            date: '12/12/2021',
-            status: 'On the way',
-            total: 1600
+            total: 500
         },
         {
             id: 112347,
             date: '12/12/2021',
             status: 'Delivered',
-            total: 2000
-        },
-        {
-            id: 112348,
-            date: '12/12/2021',
-            status: 'Cancelled',
-            total: 100
+            total: 200
         },
         {
             id: 112345,
             date: '12/12/2021',
             status: 'Delivered',
-            total: 1000
-        },
-        {
-            id: 112346,
-            date: '12/12/2021',
-            status: 'On the way',
-            total: 1600
+            total: 100
         },
         {
             id: 112347,
             date: '12/12/2021',
             status: 'Delivered',
-            total: 2000
+            total: 200
         },
         {
             id: 112348,
@@ -55,14 +37,14 @@ const YourOrders = () => {
         <div className="yourorders">
             <h1 className='mainhead1'>Your Orders</h1>
             <table className='yourorderstable'>
-                <thead>
-                    <tr>
+                <tr>
                         <th scope='col'>Oder ID</th>
                         <th scope='col'>Date</th>
                         <th scope='col'>Status</th>
                         <th scope='col'>Total</th>
                         <th scope='col'>Invoice</th>
-                    </tr>
+                </tr>
+                <thead>
                 </thead>
 
                 <tbody>
@@ -79,7 +61,7 @@ const YourOrders = () => {
                                         {item.status}
                                     </div>
                                 </td>
-                                <td data-label='Total'>${item.total}</td>
+                                <td data-label='Total'>Rp.{item.total}.000</td>
                                 <td data-label='Invoice'>
                                     <button className='mainbutton1'
                                         onClick={() => {

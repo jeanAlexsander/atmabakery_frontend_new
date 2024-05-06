@@ -18,9 +18,7 @@ const HomeCategories = () => {
       </div>
       <div className='container'>
         <img src={cake3} alt='img3' />
-        <div className='content'>
           <h2>Promo Products</h2>
-        </div>
       </div>
     </div>
   )

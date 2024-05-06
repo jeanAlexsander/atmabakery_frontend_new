@@ -2,16 +2,20 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
-import { hideDeletePositionModal } from "../../../store/position";
+import { hideDeletePositionModal,deletePositionData } from "../../../store/position";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function ModalAddPosition() {
+function ModalDeletePosition() {
   const show = useSelector((state) => state.positionStore.deletePositionModal);
-
+  const deleteId = useSelector((state) => state.positionStore.deleteId);
   const dispatch = useDispatch();
 
   const handleClose = () => {
     dispatch(hideDeletePositionModal());
+  };
+  const handleDelete = () => {
+    dispatch(deletePositionData(deleteId));
+    handleClose();
   };
 
   return (
@@ -24,7 +28,11 @@ function ModalAddPosition() {
           <Button variant="danger" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" 
+          onClick={()=> {
+            handleDelete();
+          }}
+          >
             Delete
           </Button>
         </Modal.Footer>
@@ -33,4 +41,4 @@ function ModalAddPosition() {
   );
 }
 
-export default ModalAddPosition;
+export default ModalDeletePosition;

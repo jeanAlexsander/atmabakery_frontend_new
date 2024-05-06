@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ModalAddRecipe from "./addRecipeModals";
 import ModalUpdateRecipe from "./updateRecipeModals";
 import ModalDeleteRecipe from "./deleteRecipeModals";
@@ -12,33 +12,55 @@ import {
   showAddRecipeModal,
   showUpdateRecipeModal,
   showDeleteRecipeModal,
+  fetchRecipesData,
+  setDeleteRecipeId,
+  setEditRecipeData
 } from "../../../store/admin/recipe";
 
 const RecipeAdminView = () => {
   const initValue = useSelector((state) => state.recipeStore.recipeData);
-  const [recipe, setRecipes] = useState([...initValue]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredRecipe, setFilteredRecipes] = useState([]);
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
-  const filterRecipe = (cek) => {
-    var lowerCek = cek.toLowerCase();
-    var temp = initValue.filter(
+  let noUrut = 0;
+
+  const handleSearch = () => {
+    var lowerCek = searchTerm.toLowerCase();
+    const temp = initValue.filter(
       (r) =>
-        r.recipe_id.toLowerCase().includes(lowerCek) ||
-        r.product_name.toLowerCase().includes(lowerCek) 
+        r.product_name.toLowerCase().includes(lowerCek) ||
+        r.deskripsi.toLowerCase().includes(lowerCek)
     );
-    setRecipes(temp);
+    console.log(temp)
+    setFilteredRecipes(temp);
   };
+
+  useEffect(() => {
+    dispatch(fetchRecipesData());
+  }, [dispatch]);
 
   const handleOpenModal = () => {
     dispatch(showAddRecipeModal());
   };
-  const handleOpenModalUpdate = () => {
+
+  const handleOpenModalUpdate = (recipe) => {
+    dispatch(setEditRecipeData(recipe));
     dispatch(showUpdateRecipeModal());
   };
-  const handleOpenModalDelete = () => {
+
+  const handleDelete = (id) => {
+    console.log(id)
+    dispatch(setDeleteRecipeId({ id }));
     dispatch(showDeleteRecipeModal());
   };
+
+  const handleEdit = (recipe) => {
+    dispatch(setEditRecipeData({ recipe }))
+    dispatch(showUpdateRecipeModal())
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <AdminSideBar />
@@ -57,7 +79,7 @@ const RecipeAdminView = () => {
             flex: "1",
           }}
         >
-          <h4>Recipe</h4>
+          <h4>Recipes</h4>
           <div
             style={{
               display: "flex",
@@ -72,13 +94,12 @@ const RecipeAdminView = () => {
               placeholder="Search..."
               style={{ width: "300px", marginRight: "10px" }}
               ref={searchRef}
+              onChange={(r) => setSearchTerm(r.target.value)}
             />
             <Button
               variant="danger"
               className="mb-2"
-              onClick={() => {
-                filterRecipe(String(searchRef.current.value));
-              }}
+              onClick={handleSearch}
             >
               Search
             </Button>
@@ -92,7 +113,7 @@ const RecipeAdminView = () => {
           className="mt-3 "
           style={{ marginLeft: "20px" }}
         >
-          + Add Recipe
+          + Add Recipes
         </Button>
         <div
           className="p-4 container-fluid"
@@ -101,42 +122,44 @@ const RecipeAdminView = () => {
           <div className="card shadow-lg p-4 mb-5 rounded">
             <div className="card-header mb-3">
               <h2 className="fw-semibold" style={{ textAlign: "center" }}>
-                Recipe
+                Data Recipes
               </h2>
             </div>
 
             <table className="table">
               <thead>
                 <tr>
-                  <th scope="col">Recipe ID</th>
+                  <th scope="col">Nomor</th>
+                  <th scope="col">Recipe Id</th>
                   <th scope="col">Product Name</th>
-                  <th></th>
-                  <th></th>
+                  <th scope="col">Deskripsi</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {recipe.map((r) => {
+                {(searchTerm ? filteredRecipe : initValue).map((r) => {
+                  noUrut += 1
                   return (
                     <tr key={r.recipe_id}>
+                      <td>{noUrut}</td>
                       <td>{r.recipe_id}</td>
                       <td>{r.product_name}</td>
-                      <td></td>
+                      <td>{r.deskripsi}</td>
                       <td>
                         <Button
                           variant="primary"
-                          className="me-2"
+                          className="me-2 btn-md"
                           onClick={() => {
-                            handleOpenModalUpdate();
+                            handleEdit(r);
                           }}
                         >
                           Edit
                         </Button>
                         <Button
                           variant="danger"
+                          className="btn-md"
                           onClick={() => {
-                            {
-                              handleOpenModalDelete();
-                            }
+                            handleDelete(r.recipe_id);
                           }}
                         >
                           Delete

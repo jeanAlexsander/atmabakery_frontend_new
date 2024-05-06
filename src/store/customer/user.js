@@ -5,6 +5,8 @@ const userViewSlice = createSlice({
     name: "userViewSlice",
     initialState: {
         indexVal: 1,
+        updateUserModal: false,
+        
     },
     reducers: {
         setIndexVal: (state, action)=> {
@@ -12,6 +14,8 @@ const userViewSlice = createSlice({
         },
     }
 });
+
+
 
 
 export const {setIndexVal} = userViewSlice.actions;

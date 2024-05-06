@@ -2,17 +2,50 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
-import { hideUpdateSalaryModal } from "../../../store/owner/salary";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { fetchSalaryData, hideUpdateSalaryModal, setCancelSalaryData, updateSalaryData } from "../../../store/owner/salary";
+import { useEffect, useRef } from "react";
 
 function ModalUpdateSalary() {
   const show = useSelector((state) => state.salaryStore.updateSalaryModal);
+  const data = useSelector((state) => state.salaryStore.updateSalarydata);
+
+
+  const salaryAmountRef = useRef(null);
+  const bonusRef = useRef(null);
+
+  useEffect(() => {
+    if(data) {
+      if(salaryAmountRef.current){
+        salaryAmountRef.current.value = data.salary_amount;
+      }
+      if(bonusRef.current){
+        bonusRef.current.value = data.bonus;
+      }
+    }
+  }, [data]);
 
   const dispatch = useDispatch();
 
   const handleClose = () => {
     dispatch(hideUpdateSalaryModal());
+    dispatch(setCancelSalaryData());
   };
+
+  const handleSaveChanges = () => {
+    const updatedSalary = {
+      salary_id: data.salary_id,
+      bonus: bonusRef.current.value,
+      salary_amount: salaryAmountRef.current.value,
+    };
+
+    dispatch(updateSalaryData(updatedSalary));
+
+    handleClose();
+  };
+  
+
+
 
   return (
     <>
@@ -23,30 +56,12 @@ function ModalUpdateSalary() {
         <Modal.Body>
 
           <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Salary ID</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="enter First Name"
-                autoFocus
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Employee ID</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="enter Last Name"
-                autoFocus
-              />
-            </Form.Group>
-
             <Form.Group
               className="mb-3"
               controlId="exampleForm.ControlTextarea1"
             >
               <Form.Label>Salary Amount</Form.Label>
-              <Form.Control as="textarea" rows={3} />
+              <Form.Control as="textarea" rows={3} ref={salaryAmountRef} required />
             </Form.Group>
 
             <Form.Group
@@ -54,24 +69,16 @@ function ModalUpdateSalary() {
               controlId="exampleForm.ControlTextarea1"
             >
               <Form.Label>Bonus</Form.Label>
-              <Form.Control as="textarea" rows={3} />
+              <Form.Control as="textarea" rows={3} ref={bonusRef} required />
             </Form.Group>
           </Form>
 
-          <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
-              <Form.Label>Paid Time</Form.Label>
-              <Form.Control as="textarea" rows={3} />
-            </Form.Group>
-          
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleSaveChanges}>
             Save Changes
           </Button>
         </Modal.Footer>

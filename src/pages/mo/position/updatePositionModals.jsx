@@ -2,17 +2,42 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
-import { hideUpdatePositionModal } from "../../../store/position";
+import {
+  hideUpdatePositionModal,
+  fetchPositionData,
+  addPositionData,
+  getDataPosition,
+} from "../../../store/position";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useEffect, useRef } from "react";
 
 function ModalUpdatePosition() {
   const show = useSelector((state) => state.positionStore.updatePositionModal);
+  const data = useSelector((state) => state.positionStore.positionDataDB);
+  const id = useSelector((state) => state.positionStore.deleteId);
+
+  const positionNameRef = useRef(null);
 
   const dispatch = useDispatch();
 
   const handleClose = () => {
     dispatch(hideUpdatePositionModal());
   };
+
+  const handleSave = () => {
+    const positionName = positionNameRef.current.value;
+
+    const data = {
+      id: id,
+      position_id: positionName,
+    };
+    dispatch(addPositionData(data));
+    handleClose();
+  };
+
+  useEffect(() => {
+    dispatch(getDataPosition());
+  }, [dispatch]);
 
   return (
     <>
@@ -26,11 +51,13 @@ function ModalUpdatePosition() {
               classname="custom-select "
               id="inputGroupSelect03"
               style={{ width: "500px", height: "40px" }}
+              ref={positionNameRef}
             >
               <option selected>Choose...</option>
-              <option value="1">OB</option>
-              <option value="2">Kitchen</option>
-              <option value="3">Packaging</option>
+
+              {data.map((e) => {
+                return <option value={e.position_id} >{e.position_name}</option>;
+              })}
             </select>
           </div>
         </Modal.Body>
@@ -38,7 +65,12 @@ function ModalUpdatePosition() {
           <Button variant="danger" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button
+            variant="primary"
+            onClick={() => {
+              handleSave();
+            }}
+          >
             Save Changes
           </Button>
         </Modal.Footer>

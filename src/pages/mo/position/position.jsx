@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ModalAddPosition from "./addPositionModals";
 import ModalUpdatePosition from "./updatePositionModals";
 import ModalDeletePosition from "./deletePositionModals";
@@ -12,34 +12,60 @@ import {
   showAddPositionModal,
   showUpdatePositionModal,
   showDeletePositionModal,
+  fetchPositionData,
+  setDeleteId,
+  setEditPositionData,
 } from "../../../store/position";
 
 const PositionView = () => {
   const initValue = useSelector((state) => state.positionStore.positionData);
-  const [position, setPosition] = useState([...initValue]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredPosition, setFilteredPosition] = useState([]);
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
-  const filterPosition = (cek) => {
-    var lowerCek = cek.toLowerCase();
-    var temp = initValue.filter(
-      (p) =>
-        p.first_name.toLowerCase().includes(lowerCek) ||
-        p.last_name.toLowerCase().includes(lowerCek) ||
-        p.role_position.toLowerCase().includes(lowerCek)
-    );
-    setPosition(temp);
-  };
+  useEffect(() => {
+    dispatch(fetchPositionData());
+  }, [dispatch]);
 
   const handleOpenModal = () => {
     dispatch(showAddPositionModal());
   };
   const handleOpenModalUpdate = () => {
     dispatch(showUpdatePositionModal());
+    dispatch(setEditPositionData(position));
   };
   const handleOpenModalDelete = () => {
+    dispatch(setDeleteId({ id }));
     dispatch(showDeletePositionModal());
   };
+
+
+  const handleSearch = () => {
+    var lowerCek = searchTerm.toLowerCase();
+    var temp = initValue.filter(
+      (p) =>
+        p.position_name.toLowerCase().includes(lowerCek) ||
+        p.position_id.toLowerCase().includes(lowerCek)
+    );
+    setFilteredPosition(temp);
+  };
+
+  const handleDelete = (id) => {
+    dispatch(setDeleteId({ id }));
+    dispatch(showDeletePositionModal());
+  };
+
+  const handleUpdate = (id) => {
+    dispatch(setDeleteId({ id }));
+    dispatch(showUpdatePositionModal());
+  };
+
+  const handleAdd = (id) => {
+    dispatch(setDeleteId({id}))
+    dispatch(showAddPositionModal());
+  }
+
   return (
     <div style={{ display: "flex" }}>
       <MOSideBar />
@@ -58,7 +84,7 @@ const PositionView = () => {
             flex: "1",
           }}
         >
-          <h4>Employee</h4>
+          <h4>Position</h4>
           <div
             style={{
               display: "flex",
@@ -73,28 +99,14 @@ const PositionView = () => {
               placeholder="Search..."
               style={{ width: "300px", marginRight: "10px" }}
               ref={searchRef}
+              value={searchTerm}
+              onChange={(p) => setSearchTerm(p.target.value)}
             />
-            <Button
-              variant="danger"
-              className="mb-2"
-              onClick={() => {
-                filterPosition(String(searchRef.current.value));
-              }}
-            >
+            <Button variant="danger" className="mb-2" onClick={handleSearch}>
               Search
             </Button>
           </div>
         </div>
-        <Button
-          onClick={() => {
-            handleOpenModal();
-          }}
-          variant="success"
-          className="mt-3 "
-          style={{ marginLeft: "20px" }}
-        >
-          + Add Position
-        </Button>
         <div
           className="p-4 container-fluid"
           style={{ overflowY: "auto", flex: "1" }}
@@ -102,52 +114,52 @@ const PositionView = () => {
           <div className="card shadow-lg p-4 mb-5 rounded">
             <div className="card-header mb-3">
               <h2 className="fw-semibold" style={{ textAlign: "center" }}>
-                Data Position
+                Position Data
               </h2>
             </div>
-
             <table className="table">
               <thead>
                 <tr>
-                  <th scope="col">Employee_id</th>
+                  <th scope="col">User id</th>
                   <th scope="col">Name</th>
-                  <th scope="col">Role Position</th>
-                  <th scope="col">Actions</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Position Name</th>
                 </tr>
               </thead>
               <tbody>
-                {position.map((p) => {
-                  return (
-                    <tr key={p.id}>
-                      <td>{p.id}</td>
-                      <td>
-                        {p.first_name} {p.last_name}
-                      </td>
-                      <td>{p.role_position}</td>
-                      <td>
-                        <Button
-                          variant="primary"
-                          className="me-2"
-                          onClick={() => {
-                            handleOpenModalUpdate();
-                          }}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="danger"
-                          onClick={() => {
-                            {
-                              handleOpenModalDelete();
-                            }
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {(searchTerm ? filteredPosition : initValue).map((p) => (
+                  <tr key={p.user_id}>
+                    <td>{p.user_id}</td>
+                    <td>{p.first_name} {p.last_name}</td>
+                    <td>{p.email} </td>
+                    <td>{p.position_name  === undefined ? "none" : p.position_name}</td>
+                    <td>
+                      <Button
+                        variant="warning"
+                        className="me-2"
+                        onClick={() => handleUpdate(p.user_id)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="danger"
+                        className="me-2"
+                        onClick={() => handleDelete(p.user_id)}
+                        disabled={p.position_name  === undefined ? true : false}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        variant="success"
+                        className="me-2"
+                        onClick={() => handleAdd(p.user_id)}
+                        disabled={p.position_name  === undefined ? false : true}
+                      >
+                        Add
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

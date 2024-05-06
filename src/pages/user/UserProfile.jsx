@@ -41,7 +41,7 @@ const UserProfile = () => {
             </div>
             
          </div>
-        <Footer1/>
+
         <Footer2/>
         </div>
   )

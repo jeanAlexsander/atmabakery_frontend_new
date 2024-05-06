@@ -1,8 +1,8 @@
 import React from 'react'
 
-
 const ChangePassword = () => {
     return (
+        <>
         <div className='accountsettings'>
             <h1 className='mainhead1'>Change Password</h1>
 
@@ -26,7 +26,8 @@ const ChangePassword = () => {
 
             >Save Changes</button>
         </div>
+        </>
     )
 }
 
-export default ChangePassword
+export default ChangePassword;
