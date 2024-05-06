@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import employeeSlice from "./employee";
-import positionSlice from "./position";
-import presensiSlice from "./presensi";
-import custodianSlice from "./custodian";
-import ingredientSlice from "./ingredient";
-import otherNeedSlice from "./otherNeed";
+import employeeSlice from "../store/employee";
+import positionSlice from "../store/position";
+import presensiSlice from "../store/presensi";
+import custodianSlice from "../store/custodian";
+import ingredientSlice from "../store/ingredient";
+import otherNeedSlice from "../store/otherNeed";
+import hampersSlice from "./admin/hampers";
+import produkSlice from "./admin/produk";
 
 export const store = configureStore({
     reducer: {
@@ -13,6 +15,8 @@ export const store = configureStore({
         presensiStore: presensiSlice.reducer,
         custodianStore: custodianSlice.reducer,
         ingredientStore: ingredientSlice.reducer,
-        otherNeedStore: otherNeedSlice.reducer
+        otherNeedStore: otherNeedSlice.reducer,
+        hampersStore: hampersSlice.reducer,
+        produkStore: produkSlice.reducer,
     }
 });

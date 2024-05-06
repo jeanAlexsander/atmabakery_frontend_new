@@ -94,7 +94,11 @@ function ModalAddEmployees() {
               <option selected>Choose...</option>
               {role.map((r) => {
                 {
-                  return <option value={r.role_id}>{r.role_name}</option>;
+                  return (
+                    <option value={r.role_id} key={r.role_id}>
+                      {r.role_name}
+                    </option>
+                  );
                 }
               })}
             </select>
@@ -108,7 +112,7 @@ function ModalAddEmployees() {
             variant="primary"
             onClick={() => {
               handleSave();
-              // handleClose();
+              handleClose();
             }}
           >
             Save Changes

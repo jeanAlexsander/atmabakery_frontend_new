@@ -12,32 +12,33 @@ import {
   showAddProdukModal,
   showUpdateProdukModal,
   showDeleteProdukModal,
+  fetchProdukData,
+  setDeleteProdukId,
+  setUpdateData,
 } from "../../../store/admin/produk";
 import Card from "react-bootstrap/Card";
-import gambar1 from "../../../assets/bg1.png"
+import gambar1 from "../../../assets/bg1.png";
 
 const ProdukAdminView = () => {
   const initValue = useSelector((state) => state.produkStore.produkData);
-  const [produk, setProduk] = useState([...initValue]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProduct, setFilteredProduct] = useState([]);
+
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
-  const filterProduk = (cek) => {
+  const filterProduk = () => {
     console.log("access");
-    var lowerCek = cek.toLowerCase();
+    var lowerCek = searchTerm.toLowerCase();
     var temp = initValue.filter(
       (p) =>
-        p.produk_id.toString().toLowerCase().includes(lowerCek) ||
-        p.custodian_id.toLowerCase().includes(lowerCek) ||
+        p.product_id.toString().toLowerCase().includes(lowerCek) ||
         p.name.toLowerCase().includes(lowerCek) ||
-        p.price.toLowerCase().includes(lowerCek) ||
-        p.quantity.toLowerCase().includes(lowerCek) ||
-        p.image.toLowerCase().includes(lowerCek) ||
-        p.category_id.toLowerCase().includes(lowerCek) 
+        String(p.price).includes(lowerCek) ||
+        String(p.quantity).includes(lowerCek)
     );
-    setProduk(temp);
+    setFilteredProduct(temp);
   };
-  
 
   const handleOpenModal = () => {
     dispatch(showAddProdukModal());
@@ -48,6 +49,21 @@ const ProdukAdminView = () => {
   const handleOpenModalDelete = () => {
     dispatch(showDeleteProdukModal());
   };
+
+  const handleDelete = (id) => {
+    dispatch(showDeleteProdukModal());
+    dispatch(setDeleteProdukId({ id }));
+  };
+
+  const handleUpdate = (data) => {
+    dispatch(setUpdateData({ data }));
+    handleOpenModalUpdate();
+  };
+
+  useEffect(() => {
+    dispatch(fetchProdukData());
+  }, [dispatch]);
+
   return (
     <div style={{ display: "flex" }}>
       <AdminSideBar />
@@ -66,7 +82,7 @@ const ProdukAdminView = () => {
             flex: "1",
           }}
         >
-          <h4>Produk</h4>
+          <h4>Product</h4>
           <div
             style={{
               display: "flex",
@@ -81,6 +97,7 @@ const ProdukAdminView = () => {
               placeholder="Search..."
               style={{ width: "300px", marginRight: "10px" }}
               ref={searchRef}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <Button
               variant="danger"
@@ -101,7 +118,7 @@ const ProdukAdminView = () => {
           className="mt-3 "
           style={{ marginLeft: "20px" }}
         >
-          + Add Produk
+          + Add Product
         </Button>
         <div
           className="p-4 container-fluid"
@@ -110,16 +127,14 @@ const ProdukAdminView = () => {
           <div className="card shadow-lg p-4 mb-5 rounded">
             <div className="card-header mb-3">
               <h2 className="fw-semibold" style={{ textAlign: "center" }}>
-                Produk
+                Product
               </h2>
             </div>
-            <div
-              style={{ display: "flex", flexDirection: "row", rowGap: "10px" }}
-            >
-              {produk.map((p) => {
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              {(searchTerm ? filteredProduct : initValue).map((p) => {
                 return (
                   <div
-                    key={p.produk_id} 
+                    key={p.produk_id}
                     style={{
                       width: "calc(100% / 3)",
                       padding: "0 5px",
@@ -127,10 +142,16 @@ const ProdukAdminView = () => {
                     }}
                   >
                     <Card style={{ width: "18rem" }}>
-                      <Card.Img variant="top" src={gambar1} />
+                      <Card.Img
+                        variant="top"
+                        src={p.image === null ? gambar1 : p.image}
+                      />
                       <Card.Body>
                         <Card.Title>{p.name}</Card.Title>
-                        <Card.Text>{p.price}, {p.custodian_id} {p.quantity}, {p.category_id}, </Card.Text>
+                        <Card.Text>
+                          <h6>Price : {p.price}</h6>
+                          <h6>Quantity : {p.quantity}</h6>
+                        </Card.Text>
                         <div
                           style={{
                             display: "flex",
@@ -148,8 +169,9 @@ const ProdukAdminView = () => {
                               height: "auto",
                               lineHeight: "normal",
                             }}
-                            onClick={()=>{handleOpenModalUpdate()}}
-
+                            onClick={() => {
+                              handleUpdate(p);
+                            }}
                           >
                             Update
                           </Button>
@@ -163,7 +185,9 @@ const ProdukAdminView = () => {
                               height: "auto",
                               lineHeight: "normal",
                             }}
-                            onClick={()=>{handleOpenModalDelete()}}
+                            onClick={() => {
+                              handleDelete(p.product_id);
+                            }}
                           >
                             Delete
                           </Button>

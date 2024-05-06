@@ -3,14 +3,16 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ModalUpdatePresensi from "./updatePresensiModals";
 import { useDispatch, useSelector } from "react-redux";
-import { showUpdatePresensiModal } from "../../../store/presensi";
+import { fetchPesensi, showUpdatePresensiModal } from "../../../store/presensi";
 
 const PresensiView = () => {
   const initValue = useSelector((state) => state.presensiStore.presensiData);
-  const [presensi, setPresensi] = useState([...initValue]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredPresensi, setFilteredPresensi] = useState([]);
+  const [updatedData, setUpdatedData] = useState([]); // State untuk menyimpan data yang telah diubah
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -22,15 +24,38 @@ const PresensiView = () => {
         p.last_name.toLowerCase().includes(lowerCek) ||
         p.attendance.toLowerCase().includes(lowerCek)
     );
-    setPresensi(temp);
+    setSearchTerm(temp);
   };
 
   const handleOpenModalUpdate = () => {
     dispatch(showUpdatePresensiModal());
   };
+
+  const handleChangeAttendance = (employeeId, newValue) => {
+    console.log(updatedData);
+    const updatedIndex = updatedData.findIndex(
+      (data) => data.employee_id === employeeId
+    );
+
+    if (updatedIndex !== -1) {
+      updatedData[updatedIndex].attendance_time = newValue;
+    } else {
+      const newData = { employee_id: employeeId, attendance_time: newValue };
+      setUpdatedData([...updatedData, newData]);
+    }
+  };
+
+  const belumAbsen = <td>Not Present Yet</td>;
+  const sudahAbsen = <td>Present</td>;
+  const tidakHadir = <td>Not Present</td>;
+
+  useEffect(() => {
+    dispatch(fetchPesensi());
+  }, [dispatch]);
+
   return (
     <div style={{ display: "flex" }}>
-      <MOSideBar />\
+      <MOSideBar />
       <ModalUpdatePresensi />
       <div style={{ width: "100%" }}>
         <div
@@ -59,6 +84,9 @@ const PresensiView = () => {
               placeholder="Search..."
               style={{ width: "300px", marginRight: "10px" }}
               ref={searchRef}
+              onChange={(e) => {
+                setFilteredPresensi(String(e.target.value));
+              }}
             />
             <Button
               variant="danger"
@@ -73,7 +101,7 @@ const PresensiView = () => {
         </div>
         <Button
           onClick={() => {
-            handleOpenModal();
+            handleOpenModalUpdate();
           }}
           variant="success"
           className="mt-3 "
@@ -98,26 +126,38 @@ const PresensiView = () => {
                   <th scope="col">Employee_id</th>
                   <th scope="col">Name</th>
                   <th scope="col">Attendance</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {presensi.map((p) => {
+                {(searchTerm ? filteredPresensi : initValue).map((p) => {
                   return (
-                    <tr key={p.id}>
-                      <td>{p.id}</td>
+                    <tr key={p.employee_id}>
+                      <td>{p.employee_id}</td>
                       <td>
                         {p.first_name} {p.last_name}
                       </td>
+                      {p.attendance_time === undefined && belumAbsen}
+                      {p.attendance_time === "null" && tidakHadir}
+                      {p.attendance_time !== undefined && sudahAbsen}
+
                       <td>
                         <div class="input-group mb-3">
                           <select
-                            classname="custom-select "
+                            className="custom-select "
                             id="inputGroupSelect03"
                             style={{ width: "100px", height: "40px" }}
+                            onChange={(e) => {
+                              handleChangeAttendance(
+                                p.employee_id,
+                                e.target.value
+                              );
+                            }}
+                            value={p.attendance}
                           >
-                            <option selected>Choose...</option>
-                            <option value="1">Hadir</option>
-                            <option value="2">Tidak Hadir</option>
+                            <option value="Hadir">Choose...</option>
+                            <option value="Hadir">Hadir</option>
+                            <option value="Tidak Hadir">Tidak Hadir</option>
                           </select>
                         </div>
                       </td>

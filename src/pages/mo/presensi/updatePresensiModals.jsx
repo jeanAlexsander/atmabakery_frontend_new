@@ -22,41 +22,8 @@ function ModalUpdatePresensi() {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="enter First Name"
-                autoFocus
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="enter Last Name"
-                autoFocus
-              />
-            </Form.Group>
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
-              <Form.Label>Example textarea</Form.Label>
-              <Form.Control as="textarea" rows={3} />
-            </Form.Group>
+            <h4>Are you sure to save data?</h4>
           </Form>
-          <div class="input-group mb-3">
-            <select
-              classname="custom-select "
-              id="inputGroupSelect03"
-              style={{ width: "500px", height: "40px" }}
-            >
-              <option selected>Choose...</option>
-              <option value="1">Hadir</option>
-              <option value="2">Tidak Hadir</option>
-            </select>
-          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={handleClose}>

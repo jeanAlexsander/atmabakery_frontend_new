@@ -1,49 +1,63 @@
-import AdminSideBar from "../component/side_navbar_admin";
-import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useRef, useEffect } from "react";
-import ModalAddHampers from "./addHampers";
-import ModalUpdateHampers from "./updateHampers";
-import ModalDeleteHampers from "./deleteHampers";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   showAddHampersModal,
   showUpdateHampersModal,
   showDeleteHampersModal,
+  fetchHampersData,
+  setDeleteHamperId,
+  setEditHampersData,
 } from "../../../store/admin/hampers";
-import Card from "react-bootstrap/Card";
+import AdminSideBar from "../component/side_navbar_admin";
+import ModalAddHampers from "./addHampers";
+import ModalUpdateHampers from "./updateHampers";
+import ModalDeleteHampers from "./deleteHampers";
+import { Button, Card } from "react-bootstrap";
 import gambar1 from "../../../assets/bg1.png";
 
 const HampersAdminView = () => {
   const initValue = useSelector((state) => state.hampersStore.hampersData);
-  const [hampers, setHampers] = useState([...initValue]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredHampers, setFilteredHampers] = useState([]);
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
-  const filterHampers = (cek) => {
-    console.log("access");
-    var lowerCek = cek.toLowerCase();
-    var temp = initValue.filter(
+  useEffect(() => {
+    dispatch(fetchHampersData());
+  }, [dispatch]);
+
+  const filterHampers = () => {
+    const lowerCek = searchTerm.toLowerCase();
+    const temp = initValue.filter(
       (h) =>
-        h.hampers_id.toString().toLowerCase().includes(lowerCek) ||
         h.name.toLowerCase().includes(lowerCek) ||
         h.hampers_status.toLowerCase().includes(lowerCek)
     );
-    setHampers(temp);
+    setFilteredHampers(temp);
   };
-  
 
   const handleOpenModal = () => {
     dispatch(showAddHampersModal());
   };
+
   const handleOpenModalUpdate = () => {
     dispatch(showUpdateHampersModal());
   };
+
   const handleOpenModalDelete = () => {
     dispatch(showDeleteHampersModal());
   };
+
+  const handleDelete = (id) => {
+    dispatch(setDeleteHamperId({ id }));
+    dispatch(showDeleteHampersModal());
+  };
+
+  const handleUpdate = (hampers) => {
+    dispatch(setEditHampersData({ hampers }));
+    dispatch(showUpdateHampersModal());
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <AdminSideBar />
@@ -77,27 +91,21 @@ const HampersAdminView = () => {
               placeholder="Search..."
               style={{ width: "300px", marginRight: "10px" }}
               ref={searchRef}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Button
-              variant="danger"
-              className="mb-2"
-              onClick={() => {
-                filterHampers(String(searchRef.current.value));
-              }}
-            >
+            <Button variant="danger" className="mb-2" onClick={filterHampers}>
               Search
             </Button>
           </div>
         </div>
         <Button
-          onClick={() => {
-            handleOpenModal();
-          }}
+          onClick={handleOpenModal}
           variant="success"
           className="mt-3 "
           style={{ marginLeft: "20px" }}
         >
-          + Add Recipe
+          + Add Hampers
         </Button>
         <div
           className="p-4 container-fluid"
@@ -106,69 +114,50 @@ const HampersAdminView = () => {
           <div className="card shadow-lg p-4 mb-5 rounded">
             <div className="card-header mb-3">
               <h2 className="fw-semibold" style={{ textAlign: "center" }}>
-                Recipe
+                Hampers
               </h2>
             </div>
-            <div
-              style={{ display: "flex", flexDirection: "row", rowGap: "10px" }}
-            >
-              {hampers.map((h) => {
-                return (
-                  <div
-                    key={h.hampers_id}
-                    style={{
-                      width: "calc(100% / 3)",
-                      padding: "0 5px",
-                      boxSizing: "border-box",
-                    }}
-                  >
-                    <Card style={{ width: "18rem" }}>
-                      <Card.Img variant="top" src={gambar1} />
-                      <Card.Body>
-                        <Card.Title>{h.name}</Card.Title>
-                        <Card.Text>{h.hampers_status}</Card.Text>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              {(searchTerm ? filteredHampers : initValue).map((h) => (
+                <div
+                  key={h.hampers_id}
+                  style={{ width: "calc(100% / 3)", padding: "0 5px" }}
+                >
+                  <Card style={{ width: "18rem" }}>
+                    <Card.Img
+                      variant="top"
+                      src={h.image === "NULL" ? gambar1 : h.image}
+                    />
+                    <Card.Body>
+                      <Card.Title>{h.name}</Card.Title>
+                      <Card.Text>{h.hampers_status}</Card.Text>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Button
+                          variant="primary"
+                          onClick={() => {
+                            handleUpdate(h);
                           }}
                         >
-                          <Button
-                            variant="primary"
-                            className="btn-lg"
-                            style={{
-                              fontSize: "15px",
-                              flex: "1",
-                              marginRight: "5px",
-                              height: "auto",
-                              lineHeight: "normal",
-                            }}
-                            onClick={()=>{handleOpenModalUpdate()}}
-
-                          >
-                            Update
-                          </Button>
-                          <Button
-                            variant="danger"
-                            className="btn-lg"
-                            style={{
-                              fontSize: "15px",
-                              flex: "1",
-                              marginLeft: "5px",
-                              height: "auto",
-                              lineHeight: "normal",
-                            }}
-                            onClick={()=>{handleOpenModalDelete()}}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                );
-              })}
+                          Update
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => {
+                            handleDelete(h.hampers_id);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </div>
+              ))}
             </div>
           </div>
         </div>

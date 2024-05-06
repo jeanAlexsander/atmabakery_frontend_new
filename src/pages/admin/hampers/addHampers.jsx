@@ -2,16 +2,34 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
-import { hideAddHampersModal } from "../../../store/admin/hampers";
+import { addHampers, hideAddHampersModal } from "../../../store/admin/hampers";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useRef } from "react";
 
 function ModalAddHampers() {
   const show = useSelector((state) => state.hampersStore.addHampersModal);
+  const nameRef = useRef(null);
+  const statusRef = useRef(null);
+  const imageRef = useRef(null);
 
   const dispatch = useDispatch();
 
   const handleClose = () => {
     dispatch(hideAddHampersModal());
+  };
+
+  const handleSave = () => {
+    const name = nameRef.current.value;
+    const status = statusRef.current.value;
+    const image = imageRef.current.files[0];
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("hampers_status", status);
+    formData.append("image", image);
+
+    dispatch(hideAddHampersModal());
+    dispatch(addHampers(formData));
   };
 
   return (
@@ -23,52 +41,50 @@ function ModalAddHampers() {
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>First Name</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="enter First Name"
+                placeholder="enter Name"
                 autoFocus
+                ref={nameRef}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Last Name</Form.Label>
+              <Form.Label>Hampers Status</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="enter Last Name"
+                placeholder="Hampers Status"
                 autoFocus
+                ref={statusRef}
               />
-            </Form.Group>
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
-              <Form.Label>Example textarea</Form.Label>
-              <Form.Control as="textarea" rows={3} />
             </Form.Group>
           </Form>
           <div class="input-group mb-3">
-            {/* <div class="input-group-prepend">
-              <button class="btn btn-outline-secondary" type="button">
-                Button
-              </button>
-            </div> */}
-            <select
-              className="custom-select "
-              id="inputGroupSelect03"
-              style={{ width: "500px", height: "40px" }}
-            >
-              <option selected>Choose...</option>
-              <option value="1">Employee</option>
-              <option value="2">Manager</option>
-              <option value="3">Owner</option>
-            </select>
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroupFileAddon01">
+                Upload
+              </span>
+            </div>
+            <div class="custom-file">
+              <Form.Label>Hampers Image</Form.Label>
+              <input
+                type="file"
+                class="custom-file-input"
+                id="inputGroupFile01"
+                aria-describedby="inputGroupFileAddon01"
+                ref={imageRef}
+              />
+              <label class="custom-file-label" for="inputGroupFile01">
+                Choose file
+              </label>
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleSave}>
             Save Changes
           </Button>
         </Modal.Footer>
