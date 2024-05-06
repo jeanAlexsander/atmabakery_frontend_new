@@ -8,7 +8,7 @@ import {
 } from "../../../store/employee";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function ModalAddEmployees() {
+function ModalDeleteEmployees() {
   const show = useSelector((state) => state.employeeStore.deleteEmployeeModal);
   const deleteId = useSelector((state) => state.employeeStore.deleteId);
 
@@ -46,4 +46,4 @@ function ModalAddEmployees() {
   );
 }
 
-export default ModalAddEmployees;
+export default ModalDeleteEmployees;

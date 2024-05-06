@@ -1,78 +1,77 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { URL } from "../../constants";
+import { URL } from "../../../constants";
 
-const ingredientSlice = createSlice({
-    name: "ingredientStore",
+const custodianSlice = createSlice({
+    name: "custodianStore",
     initialState: {
-        addIngredientModal: false,
-        updateIngredientModal: false,
-        deleteIngredientModal: false,
-        ingredientData: [],
+        addCustodianModal: false,
+        updateCustodianModal: false,
+        deleteCustodianModal: false,
+        custodianData: [],
         deleteId: null,
-        editIngredientData: {}
+        editCustodianData: {}
     },
+
     reducers: {
-        showAddIngredientModal: (state) => {
-            state.addIngredientModal = true;
+        showAddCustodianModal: (state) => {
+            state.addCustodianModal = true;
         },
-        hideAddIngredientModal: (state) => {
-            state.addIngredientModal = false;
+        hideAddCustodianModal: (state) => {
+            state.addCustodianModal = false;
         },
-        showUpdateIngredientModal: (state) => {
-            state.updateIngredientModal = true;
+        showUpdateCustodianModal: (state) => {
+            state.updateCustodianModal = true;
         },
-        hideUpdateIngredientModal: (state) => {
-            state.updateIngredientModal = false;
+        hideUpdateCustodianModal: (state) => {
+            state.updateCustodianModal = false;
         },
-        showDeleteIngredientModal: (state) => {
-            state.deleteIngredientModal = true;
+        showDeleteCustodianModal: (state) => {
+            state.deleteCustodianModal = true;
         },
-        hideDeleteIngredientModal: (state) => {
-            state.deleteIngredientModal = false;
+        hideDeleteCustodianModal: (state) => {
+            state.deleteCustodianModal = false;
         },
-        setIngredientData: (state, action) => {
-            state.ingredientData = [...action.payload.data];
+        setCustodianData: (state, action) => {
+            state.custodianData = [...action.payload.data];
         },
-        setDeleteIngredientId: (state, action) => {
+        setDeleteCustodianId: (state, action) => {
             state.deleteId = action.payload.id;
         },
-        setEditIngredientData: (state, action) => {
-            console.log(action.payload.ingredient);
-            state.editIngredientData = action.payload.ingredient;
+        setEditCustodianData: (state, action) => {
+            state.editCustodianData = action.payload.custodian;
         },
-        setCancelEditIngredient: (state) => {
-            state.editIngredientData = {};
+        setCancelEditCustodian: (state) => {
+            state.editCustodianData = {};
         }
     }
 });
 
-export const fetchIngredientsData = () => {
+export const fetchCustodiansData = () => {
     return async (dispatch) => {
         async function fetchDataDatabase() {
-            const response = await fetch(`${URL}get-ingredients`);
+            const response = await fetch(`${URL}get-custodians`);
             if (!response.ok) {
                 throw new Error("Something went wrong!");
             }
             const data = await response.json();
-            console.log(data)
             return data.data;
         }
 
         try {
             const data = await fetchDataDatabase();
-            dispatch(setIngredientData({ data }));
+            dispatch(setCustodianData({ data }));
         } catch (error) {
             console.log(error);
         }
     };
 };
 
-export const addIngredientData = (data) => {
+export const addCustodianData = (data) => {
     const inputData = data
 
     return async (dispatch) => {
         async function addDataToDatabase() {
-            const response = await fetch(`${URL}add-ingredients`, {
+            const response = await fetch(`${URL}add-custodians`, {
                 method: "POST",
                 body: JSON.stringify(inputData),
                 headers: {
@@ -88,7 +87,7 @@ export const addIngredientData = (data) => {
 
         try {
             const newData = await addDataToDatabase();
-            dispatch(fetchIngredientsData());
+            dispatch(fetchCustodiansData());
             return newData;
         } catch (error) {
             console.log(error);
@@ -97,12 +96,12 @@ export const addIngredientData = (data) => {
     };
 };
 
-export const deleteIngredientData = (id) => {
+export const deleteCustodianData = (id) => {
     console.log("akses")
     console.log(id)
     return async (dispatch) => {
         async function deleteDataFromDatabase() {
-            const response = await fetch(`${URL}delete-ingredients/${id}`, {
+            const response = await fetch(`${URL}delete-custodians/${id}`, {
                 method: "DELETE",
             });
             if (!response.ok) {
@@ -114,18 +113,18 @@ export const deleteIngredientData = (id) => {
 
         try {
             await deleteDataFromDatabase();
-            dispatch(fetchIngredientsData());
+            dispatch(fetchCustodiansData());
         } catch (error) {
             console.log(error);
         }
     };
 };
 
-export const updateIngredientData = (data) => {
+export const updateCustodianData = (data) => {
     const inputData = data
     return async (dispatch) => {
         async function updateDataDatabase() {
-            const response = await fetch(`${URL}update-ingredients/${inputData.ingredient_id}`, {
+            const response = await fetch(`${URL}update-custodians/${inputData.custodian_id}`, {
                 method: "POST",
                 body: JSON.stringify(inputData),
                 headers: {
@@ -141,13 +140,24 @@ export const updateIngredientData = (data) => {
 
         try {
             await updateDataDatabase();
-            dispatch(fetchIngredientsData());
+            dispatch(fetchCustodiansData());
         } catch (error) {
             console.log(error);
         }
     };
 };
 
-export const { showAddIngredientModal, hideAddIngredientModal, hideUpdateIngredientModal, showUpdateIngredientModal, hideDeleteIngredientModal, showDeleteIngredientModal, setIngredientData, setDeleteIngredientId, setEditIngredientData, setCancelEditIngredient } = ingredientSlice.actions;
+export const {
+    showAddCustodianModal,
+    hideAddCustodianModal,
+    hideUpdateCustodianModal,
+    showUpdateCustodianModal,
+    hideDeleteCustodianModal,
+    showDeleteCustodianModal,
+    setCustodianData,
+    setDeleteCustodianId,
+    setEditCustodianData,
+    setCancelEditCustodian,
+} = custodianSlice.actions;
 
-export default ingredientSlice;
+export default custodianSlice;

@@ -2,19 +2,23 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
-import { hideDeleteOtherNeedModal } from "../../../store/otherNeed";
+import { deleteOtherNeedData, hideDeleteOtherNeedModal } from "../../../store/mo/otherNeed";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function ModalAddOtherNeed() {
-  const show = useSelector(
-    (state) => state.otherNeedStore.deleteOtherNeedModal
-  );
+function ModalDeleteOtherNeed() {
+  const show = useSelector((state) => state.otherNeedStore.deleteOtherNeedModal);
+  const deleteId = useSelector((state) => state.otherNeedStore.deleteId);
 
   const dispatch = useDispatch();
 
   const handleClose = () => {
     dispatch(hideDeleteOtherNeedModal());
   };
+
+  const handleDelete = () => {
+    dispatch(deleteOtherNeedData(deleteId));
+    dispatch(hideDeleteOtherNeedModal());
+  }
 
   return (
     <>
@@ -26,7 +30,7 @@ function ModalAddOtherNeed() {
           <Button variant="danger" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleDelete}>
             Delete
           </Button>
         </Modal.Footer>
@@ -35,4 +39,4 @@ function ModalAddOtherNeed() {
   );
 }
 
-export default ModalAddOtherNeed;
+export default ModalDeleteOtherNeed;

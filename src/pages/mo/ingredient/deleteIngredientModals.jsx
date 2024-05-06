@@ -2,17 +2,23 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
-import { hideDeleteIngredientModal } from "../../../store/ingredient";
+import { deleteIngredientData, hideDeleteIngredientModal } from "../../../store/ingredient";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function ModalAddIngredient() {
+function ModalDeleteIngredient() {
   const show = useSelector((state) => state.ingredientStore.deleteIngredientModal);
+  const deleteId = useSelector((state) => state.ingredientStore.deleteId);
 
   const dispatch = useDispatch();
 
   const handleClose = () => {
     dispatch(hideDeleteIngredientModal());
   };
+
+  const handleDelete = () => {
+    dispatch(deleteIngredientData(deleteId));
+    dispatch(hideDeleteIngredientModal());
+  }
 
   return (
     <>
@@ -24,7 +30,7 @@ function ModalAddIngredient() {
           <Button variant="danger" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleDelete}>
             Delete
           </Button>
         </Modal.Footer>
@@ -33,4 +39,4 @@ function ModalAddIngredient() {
   );
 }
 
-export default ModalAddIngredient;
+export default ModalDeleteIngredient;

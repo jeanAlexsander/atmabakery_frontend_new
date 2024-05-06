@@ -1,19 +1,52 @@
+import React, { useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  hideUpdateCustodianModal,
+  setCancelEditCustodian,
+  updateCustodianData,
+} from "../../../store/mo/custodian";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import { useDispatch, useSelector } from "react-redux";
-import { hideUpdateCustodianModal } from "../../../store/custodian";
-import "bootstrap/dist/css/bootstrap.min.css";
+
 
 function ModalUpdateCustodian() {
-  const show = useSelector(
-    (state) => state.custodianStore.updateCustodianModal
-  );
+  const show = useSelector((state) => state.custodianStore.updateCustodianModal);
+  const data = useSelector((state) => state.custodianStore.editCustodianData);
+
+  const nameRef = useRef(null);
+  const amountRef = useRef(null);
+
+  useEffect(() => {
+    console.log(data);
+    if (data) {
+      if (nameRef.current) {
+        nameRef.current.value = data.name;
+      }
+      if (amountRef.current) {
+        amountRef.current.value = data.amount;
+      }
+    }
+  }, [data]);
 
   const dispatch = useDispatch();
 
   const handleClose = () => {
+    dispatch(setCancelEditCustodian());
     dispatch(hideUpdateCustodianModal());
+  };
+
+  const handleSaveChanges = () => {
+    const updatedCustodian = {
+      custodian_id: data.custodian_id,
+      name: nameRef.current.value,
+      amount: amountRef.current.value,
+    };
+
+    dispatch(updateCustodianData(updatedCustodian));
+
+    handleClose();
   };
 
   return (
@@ -26,19 +59,11 @@ function ModalUpdateCustodian() {
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Name</Form.Label>
-              <Form.Control type="text" placeholder="enter Name" autoFocus />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Deposit Time</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="enter Deposit Time"
-                autoFocus
-              />
+              <Form.Control type="text" placeholder="Enter Name" autoFocus ref={nameRef} />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Amount</Form.Label>
-              <Form.Control type="text" placeholder="Amount" autoFocus />
+              <Form.Control type="text" placeholder="Amount" autoFocus ref={amountRef} />
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -46,7 +71,7 @@ function ModalUpdateCustodian() {
           <Button variant="danger" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleSaveChanges}>
             Save Changes
           </Button>
         </Modal.Footer>

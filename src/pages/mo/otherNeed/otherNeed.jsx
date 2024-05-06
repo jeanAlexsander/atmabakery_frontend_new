@@ -1,45 +1,68 @@
+import { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import MOSideBar from "../component/side_nav_bar";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useRef } from "react";
 import ModalAddOtherNeed from "./addOtherNeedModals";
 import ModalUpdateOtherNeed from "./updateOtherNeedModals";
 import ModalDeleteOtherNeed from "./deleteOtherNeedModals";
-import { useDispatch, useSelector } from "react-redux";
 import {
   showAddOtherNeedModal,
   showUpdateOtherNeedModal,
   showDeleteOtherNeedModal,
-} from "../../../store/otherNeed";
+  fetchOtherNeedData,
+  setDeleteOtherNeedId,
+  setEditOtherNeedData
+} from "../../../store/mo/otherNeed";
 
 const OtherNeedView = () => {
   const initValue = useSelector((state) => state.otherNeedStore.otherNeedData);
-  const [otherNeed, setOtherNeed] = useState([...initValue]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredIngredient, setFilteredIngredients] = useState([]);
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
-  const filterOtherNeed = (cek) => {
-    var lowerCek = cek.toLowerCase();
-    var temp = initValue.filter(
+  let noUrut = 0;
+
+  const handleSearch = () => {
+    var lowerCek = searchTerm.toLowerCase();
+    const temp = initValue.filter(
       (o) =>
         o.name.toLowerCase().includes(lowerCek) ||
         o.cost.toLowerCase().includes(lowerCek) ||
-        o.date.toLowerCase().includes(lowerCek)
+        String(o.date).includes(lowerCek)
     );
-    setOtherNeed(temp);
+    console.log(temp)
+    setFilteredIngredients(temp);
   };
+
+  useEffect(() => {
+    dispatch(fetchOtherNeedData());
+  }, [dispatch]);
 
   const handleOpenModal = () => {
     dispatch(showAddOtherNeedModal());
   };
-  const handleOpenModalUpdate = () => {
+
+  const handleOpenModalUpdate = (otherNeed) => {
+    dispatch(showEditOtherNeedData(otherNeed));
     dispatch(showUpdateOtherNeedModal());
   };
-  const handleOpenModalDelete = () => {
+
+  const handleDelete = (id) => {
+    console.log(id)
+    dispatch(setDeleteOtherNeedId({ id }));
     dispatch(showDeleteOtherNeedModal());
-  };
+  }
+
+  const handleEdit = (otherNeed) => {
+    dispatch(setEditOtherNeedData({ otherNeed }))
+    dispatch(showUpdateOtherNeedModal())
+  }
+
+
   return (
     <div style={{ display: "flex" }}>
       <MOSideBar />
@@ -73,13 +96,12 @@ const OtherNeedView = () => {
               placeholder="Search..."
               style={{ width: "300px", marginRight: "10px" }}
               ref={searchRef}
+              onChange={(o) => setSearchTerm(o.target.value)}
             />
             <Button
               variant="danger"
               className="mb-2"
-              onClick={() => {
-                filterOtherNeed(String(searchRef.current.value));
-              }}
+              onClick={handleSearch}
             >
               Search
             </Button>
@@ -109,6 +131,7 @@ const OtherNeedView = () => {
             <table className="table">
               <thead>
                 <tr>
+                  <th scope="col">Nomor</th>
                   <th scope="col">Other Need Id</th>
                   <th scope="col">Name</th>
                   <th scope="col">Cost</th>
@@ -117,31 +140,30 @@ const OtherNeedView = () => {
                 </tr>
               </thead>
               <tbody>
-                {otherNeed.map((o) => {
+                {(searchTerm ? filteredIngredient : initValue).map((o) => {
+                  noUrut += 1
                   return (
-                    <tr key={o.id}>
-                      <td>{o.id}</td>
-                      <td>
-                        {o.name}
-                      </td>
+                    <tr key={o.other_need_id}>
+                      <td>{noUrut}</td>
+                      <td>{o.other_need_id}</td>
+                      <td>{o.name}</td>
                       <td>{o.cost}</td>
-                      <td>{o.date}</td>
+                      <td>{o.Date_of_expense}</td>
                       <td>
                         <Button
                           variant="primary"
-                          className="me-2"
+                          className="me-2 btn-md"
                           onClick={() => {
-                            handleOpenModalUpdate();
+                            handleEdit(o);
                           }}
                         >
                           Edit
                         </Button>
                         <Button
                           variant="danger"
+                          className="btn-md"
                           onClick={() => {
-                            {
-                              handleOpenModalDelete();
-                            }
+                            handleDelete(o.other_need_id);
                           }}
                         >
                           Delete

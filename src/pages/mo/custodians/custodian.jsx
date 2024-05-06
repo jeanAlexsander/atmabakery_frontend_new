@@ -1,45 +1,63 @@
-import MOSideBar from "../component/side_nav_bar";
-import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useRef } from "react";
-import ModalAddCustodian from "./addCustodianModals";
-import ModalUpdateCustodian from "./updateCustodianModals";
-import ModalDeleteCustodian from "./deleteCustodianModals";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   showAddCustodianModal,
   showUpdateCustodianModal,
   showDeleteCustodianModal,
-} from "../../../store/custodian";
+  fetchCustodiansData,
+  setDeleteCustodianId,
+  setEditCustodianData
+} from "../../../store/mo/custodian";
+import { Button } from "react-bootstrap";
+import MOSideBar from "../component/side_nav_bar";
+import ModalAddCustodian from "./addCustodianModals";
+import ModalUpdateCustodian from "./updateCustodianModals";
+import ModalDeleteCustodian from "./deleteCustodianModals";
 
 const CustodianView = () => {
   const initValue = useSelector((state) => state.custodianStore.custodianData);
-  const [custodian, setCustodian] = useState([...initValue]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredCustodian, setFilteredCustodian] = useState([]);
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
-  const filterCustodian = (cek) => {
-    var lowerCek = cek.toLowerCase();
-    var temp = initValue.filter(
+  let noUrut = 0;
+
+  const handleSearch = () => {
+    const lowerCek = searchTerm.toLowerCase();
+    const temp = initValue.filter(
       (c) =>
         c.name.toLowerCase().includes(lowerCek) ||
         c.deposit_time.toLowerCase().includes(lowerCek) ||
-        c.amount.toLowerCase().includes(lowerCek)
+        String(c.amount).includes(lowerCek)
     );
-    setCustodian(temp);
+    console.log(temp)
+    setFilteredCustodian(temp);
   };
+
+  useEffect(() => {
+    dispatch(fetchCustodiansData());
+  }, [dispatch]);
 
   const handleOpenModal = () => {
     dispatch(showAddCustodianModal());
   };
+
   const handleOpenModalUpdate = () => {
     dispatch(showUpdateCustodianModal());
   };
-  const handleOpenModalDelete = () => {
+
+  const handleDelete = (id) => {
+    console.log(id)
+    dispatch(setDeleteCustodianId({ id }));
     dispatch(showDeleteCustodianModal());
   };
+
+  const handleEdit = (custodian) => {
+    dispatch(setEditCustodianData({ custodian }))
+    dispatch(showUpdateCustodianModal())
+  }
+
   return (
     <div style={{ display: "flex" }}>
       <MOSideBar />
@@ -73,13 +91,12 @@ const CustodianView = () => {
               placeholder="Search..."
               style={{ width: "300px", marginRight: "10px" }}
               ref={searchRef}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <Button
               variant="danger"
               className="mb-2"
-              onClick={() => {
-                filterCustodian(String(searchRef.current.value));
-              }}
+              onClick={handleSearch}
             >
               Search
             </Button>
@@ -109,6 +126,7 @@ const CustodianView = () => {
             <table className="table">
               <thead>
                 <tr>
+                  <th scope="col">NO</th>
                   <th scope="col">Custodian Id</th>
                   <th scope="col">Name</th>
                   <th scope="col">Deposit Time</th>
@@ -117,10 +135,12 @@ const CustodianView = () => {
                 </tr>
               </thead>
               <tbody>
-                {custodian.map((c) => {
+                {(searchTerm ? filteredCustodian : initValue).map((c) => {
+                  noUrut += 1
                   return (
-                    <tr key={c.id}>
-                      <td>{c.id}</td>
+                    <tr key={c.custodian_id}>
+                      <td>{noUrut}</td>
+                      <td>{c.custodian_id}</td>
                       <td>{c.name}</td>
                       <td>{c.deposit_time}</td>
                       <td>{c.amount}</td>
@@ -129,7 +149,7 @@ const CustodianView = () => {
                           variant="primary"
                           className="me-2 btn-md"
                           onClick={() => {
-                            handleOpenModalUpdate();
+                            handleEdit(c);
                           }}
                         >
                           Edit
@@ -138,9 +158,7 @@ const CustodianView = () => {
                           variant="danger"
                           className="btn-md"
                           onClick={() => {
-                            {
-                              handleOpenModalDelete();
-                            }
+                            handleDelete(c.custodian_id);
                           }}
                         >
                           Delete

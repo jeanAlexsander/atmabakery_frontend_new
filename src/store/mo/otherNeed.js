@@ -1,78 +1,79 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { URL } from "../../constants";
+import { URL } from "../../../constants";
 
-const ingredientSlice = createSlice({
-    name: "ingredientStore",
+const otherNeedSlice = createSlice({
+    name: "otherNeedStore",
     initialState: {
-        addIngredientModal: false,
-        updateIngredientModal: false,
-        deleteIngredientModal: false,
-        ingredientData: [],
+        addOtherNeedModal: false,
+        updateOtherNeedModal: false,
+        deleteOtherNeedModal: false,
+        otherNeedData: [],
         deleteId: null,
-        editIngredientData: {}
+        editOtherNeedData: {}
     },
+
     reducers: {
-        showAddIngredientModal: (state) => {
-            state.addIngredientModal = true;
+        showAddOtherNeedModal: (state) => {
+            state.addOtherNeedModal = true;
         },
-        hideAddIngredientModal: (state) => {
-            state.addIngredientModal = false;
+        hideAddOtherNeedModal: (state) => {
+            state.addOtherNeedModal = false;
         },
-        showUpdateIngredientModal: (state) => {
-            state.updateIngredientModal = true;
+        showUpdateOtherNeedModal: (state) => {
+            state.updateOtherNeedModal = true;
         },
-        hideUpdateIngredientModal: (state) => {
-            state.updateIngredientModal = false;
+        hideUpdateOtherNeedModal: (state) => {
+            state.updateOtherNeedModal = false;
         },
-        showDeleteIngredientModal: (state) => {
-            state.deleteIngredientModal = true;
+        showDeleteOtherNeedModal: (state) => {
+            state.deleteOtherNeedModal = true;
         },
-        hideDeleteIngredientModal: (state) => {
-            state.deleteIngredientModal = false;
+        hideDeleteOtherNeedModal: (state) => {
+            state.deleteOtherNeedModal = false;
         },
-        setIngredientData: (state, action) => {
-            state.ingredientData = [...action.payload.data];
+        setOtherNeedData: (state, action) => {
+            state.otherNeedData = [...action.payload.data];
         },
-        setDeleteIngredientId: (state, action) => {
+        setDeleteOtherNeedId: (state, action) => {
             state.deleteId = action.payload.id;
         },
-        setEditIngredientData: (state, action) => {
-            console.log(action.payload.ingredient);
-            state.editIngredientData = action.payload.ingredient;
+        setEditOtherNeedData: (state, action) => {
+            console.log(action.payload.otherNeed);
+            state.editOtherNeedData = action.payload.otherNeed;
         },
-        setCancelEditIngredient: (state) => {
-            state.editIngredientData = {};
+        setCancelEditOtherNeed: (state) => {
+            state.editOtherNeedData = {};
         }
     }
 });
 
-export const fetchIngredientsData = () => {
+export const fetchOtherNeedData = () => {
     return async (dispatch) => {
         async function fetchDataDatabase() {
-            const response = await fetch(`${URL}get-ingredients`);
+            const response = await fetch(`${URL}get-otherNeed`);
             if (!response.ok) {
                 throw new Error("Something went wrong!");
             }
             const data = await response.json();
-            console.log(data)
             return data.data;
         }
 
         try {
             const data = await fetchDataDatabase();
-            dispatch(setIngredientData({ data }));
+            dispatch(setOtherNeedData({ data }));
         } catch (error) {
             console.log(error);
         }
     };
 };
 
-export const addIngredientData = (data) => {
+export const addOtherNeedData = (data) => {
     const inputData = data
+    console.log(inputData)
 
     return async (dispatch) => {
         async function addDataToDatabase() {
-            const response = await fetch(`${URL}add-ingredients`, {
+            const response = await fetch(`${URL}add-otherNeed`, {
                 method: "POST",
                 body: JSON.stringify(inputData),
                 headers: {
@@ -88,7 +89,7 @@ export const addIngredientData = (data) => {
 
         try {
             const newData = await addDataToDatabase();
-            dispatch(fetchIngredientsData());
+            dispatch(fetchOtherNeedData());
             return newData;
         } catch (error) {
             console.log(error);
@@ -97,12 +98,12 @@ export const addIngredientData = (data) => {
     };
 };
 
-export const deleteIngredientData = (id) => {
+export const deleteOtherNeedData = (id) => {
     console.log("akses")
     console.log(id)
     return async (dispatch) => {
         async function deleteDataFromDatabase() {
-            const response = await fetch(`${URL}delete-ingredients/${id}`, {
+            const response = await fetch(`${URL}delete-otherNeed/${id}`, {
                 method: "DELETE",
             });
             if (!response.ok) {
@@ -114,19 +115,19 @@ export const deleteIngredientData = (id) => {
 
         try {
             await deleteDataFromDatabase();
-            dispatch(fetchIngredientsData());
+            dispatch(fetchOtherNeedData());
         } catch (error) {
             console.log(error);
         }
     };
 };
 
-export const updateIngredientData = (data) => {
+export const updateOtherNeedData = (data) => {
     const inputData = data
     return async (dispatch) => {
         async function updateDataDatabase() {
-            const response = await fetch(`${URL}update-ingredients/${inputData.ingredient_id}`, {
-                method: "POST",
+            const response = await fetch(`${URL}update-otherNeed/${inputData.other_need_id}`, {
+                method: "PUT",
                 body: JSON.stringify(inputData),
                 headers: {
                     "Content-Type": "application/json",
@@ -141,13 +142,13 @@ export const updateIngredientData = (data) => {
 
         try {
             await updateDataDatabase();
-            dispatch(fetchIngredientsData());
+            dispatch(fetchOtherNeedData());
         } catch (error) {
             console.log(error);
         }
     };
 };
 
-export const { showAddIngredientModal, hideAddIngredientModal, hideUpdateIngredientModal, showUpdateIngredientModal, hideDeleteIngredientModal, showDeleteIngredientModal, setIngredientData, setDeleteIngredientId, setEditIngredientData, setCancelEditIngredient } = ingredientSlice.actions;
+export const { showAddOtherNeedModal, hideAddOtherNeedModal, hideUpdateOtherNeedModal, showUpdateOtherNeedModal, hideDeleteOtherNeedModal, showDeleteOtherNeedModal, setOtherNeedData, setDeleteOtherNeedId, setEditOtherNeedData, setCancelEditOtherNeed, updateOtherNeedModal } = otherNeedSlice.actions;
 
-export default ingredientSlice;
+export default otherNeedSlice;

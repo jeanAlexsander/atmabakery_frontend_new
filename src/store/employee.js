@@ -9,7 +9,7 @@ const employeeSlice = createSlice({
         deleteEmployeeModal: false,
         employeeData: [],
         deleteId: null,
-        role:[],
+        role: [],
         editEmployeeData: {}
     },
     reducers: {
@@ -41,8 +41,10 @@ const employeeSlice = createSlice({
             state.role = [...action.payload.role];
         },
         setEditEmployeeData: (state, action) => {
-            console.log(action.payload.employee);
             state.editEmployeeData = action.payload.employee;
+        },
+        setCancelEditEmployee: (state) => {
+            state.editEmployeeData = {};
         }
     }
 })
@@ -56,7 +58,7 @@ export const fetchEmployeeData = () => {
                 throw new Error("Something went wrong!");
             }
             const data = await response.json();
-            return data.data;        
+            return data.data;
         }
 
         try {
@@ -67,9 +69,6 @@ export const fetchEmployeeData = () => {
         }
     };
 };
-
-
-
 
 export const deleteEmployeeData = (id) => {
     return async (dispatch) => {
@@ -101,7 +100,7 @@ export const fetchRoleData = () => {
                 throw new Error("Something went wrong!");
             }
             const data = await response.json();
-            return data.data;        
+            return data.data;
         }
 
         try {
@@ -169,6 +168,6 @@ export const updateEmployeeData = (data) => {
 }
 
 
-export const { showAddEmployeeModal, hideAddEmployeeModal, hideUpdateEmployeeModal, showUpdateEmployeeModal, hideDeleteEmployeeModal, showDeleteEmployeeModal, setEmployeeData, setDeleteId, setRole, setEditEmployeeData } = employeeSlice.actions;
+export const { showAddEmployeeModal, hideAddEmployeeModal, hideUpdateEmployeeModal, showUpdateEmployeeModal, hideDeleteEmployeeModal, showDeleteEmployeeModal, setEmployeeData, setDeleteId, setRole, setEditEmployeeData, setCancelEditEmployee } = employeeSlice.actions;
 
 export default employeeSlice;

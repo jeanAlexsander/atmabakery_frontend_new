@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ModalAddIngredient from "./addIngredientModals";
 import ModalUpdateIngredient from "./updateIngredientModals";
 import ModalDeleteIngredient from "./deleteIngredientModals";
@@ -12,36 +12,56 @@ import {
   showAddIngredientModal,
   showUpdateIngredientModal,
   showDeleteIngredientModal,
+  fetchIngredientsData,
+  setDeleteIngredientId,
+  setEditIngredientData
 } from "../../../store/ingredient";
 
 const IngredientView = () => {
-  const initValue = useSelector(
-    (state) => state.ingredientStore.ingredientData
-  );
-  const [ingredient, setIngredient] = useState([...initValue]);
+  const initValue = useSelector((state) => state.ingredientStore.ingredientData);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredIngredient, setFilteredIngredients] = useState([]);
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
-  const filterIngredient = (cek) => {
-    var lowerCek = cek.toLowerCase();
-    var temp = initValue.filter(
+  let noUrut = 0;
+
+  const handleSearch = () => {
+    var lowerCek = searchTerm.toLowerCase();
+    const temp = initValue.filter(
       (i) =>
         i.name.toLowerCase().includes(lowerCek) ||
         i.unit.toLowerCase().includes(lowerCek) ||
-        i.amount.toLowerCase().includes(lowerCek)
+        String(i.amount).includes(lowerCek)
     );
-    setIngredient(temp);
+    console.log(temp)
+    setFilteredIngredients(temp);
   };
+
+  useEffect(() => {
+    dispatch(fetchIngredientsData());
+  }, [dispatch]);
 
   const handleOpenModal = () => {
     dispatch(showAddIngredientModal());
   };
-  const handleOpenModalUpdate = () => {
+
+  const handleOpenModalUpdate = (ingredient) => {
+    dispatch(setEditIngredientData(ingredient));
     dispatch(showUpdateIngredientModal());
   };
-  const handleOpenModalDelete = () => {
+
+  const handleDelete = (id) => {
+    console.log(id)
+    dispatch(setDeleteIngredientId({ id }));
     dispatch(showDeleteIngredientModal());
   };
+
+  const handleEdit = (ingredient) => {
+    dispatch(setEditIngredientData({ ingredient }))
+    dispatch(showUpdateIngredientModal())
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <MOSideBar />
@@ -75,13 +95,12 @@ const IngredientView = () => {
               placeholder="Search..."
               style={{ width: "300px", marginRight: "10px" }}
               ref={searchRef}
+              onChange={(i) => setSearchTerm(i.target.value)}
             />
             <Button
               variant="danger"
               className="mb-2"
-              onClick={() => {
-                filterIngredient(String(searchRef.current.value));
-              }}
+              onClick={handleSearch}
             >
               Search
             </Button>
@@ -111,6 +130,7 @@ const IngredientView = () => {
             <table className="table">
               <thead>
                 <tr>
+                  <th scope="col">Nomor</th>
                   <th scope="col">Ingredient Id</th>
                   <th scope="col">Name</th>
                   <th scope="col">Unit</th>
@@ -119,10 +139,12 @@ const IngredientView = () => {
                 </tr>
               </thead>
               <tbody>
-                {ingredient.map((i) => {
+                {(searchTerm ? filteredIngredient : initValue).map((i) => {
+                  noUrut += 1
                   return (
-                    <tr key={i.id}>
-                      <td>{i.id}</td>
+                    <tr key={i.ingredient_id}>
+                      <td>{noUrut}</td>
+                      <td>{i.ingredient_id}</td>
                       <td>{i.name}</td>
                       <td>{i.unit}</td>
                       <td>{i.amount}</td>
@@ -131,7 +153,7 @@ const IngredientView = () => {
                           variant="primary"
                           className="me-2 btn-md"
                           onClick={() => {
-                            handleOpenModalUpdate();
+                            handleEdit(i);
                           }}
                         >
                           Edit
@@ -140,9 +162,7 @@ const IngredientView = () => {
                           variant="danger"
                           className="btn-md"
                           onClick={() => {
-                            {
-                              handleOpenModalDelete();
-                            }
+                            handleDelete(i.ingredient_id);
                           }}
                         >
                           Delete

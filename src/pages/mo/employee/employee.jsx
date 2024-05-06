@@ -21,6 +21,8 @@ const EmployeeView = () => {
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
+  let noUrut = 0;
+
   useEffect(() => {
     dispatch(fetchEmployeeData());
   }, [dispatch]);
@@ -43,6 +45,7 @@ const EmployeeView = () => {
     const lowerCek = searchTerm.toLowerCase();
     const temp = initValue.filter(
       (e) =>
+        String(e.employee_id).includes(lowerCek) ||
         e.first_name.toLowerCase().includes(lowerCek) ||
         e.last_name.toLowerCase().includes(lowerCek) ||
         e.email.toLowerCase().includes(lowerCek) ||
@@ -123,6 +126,7 @@ const EmployeeView = () => {
             <table className="table">
               <thead>
                 <tr>
+                  <th scope="col">Nomor</th>
                   <th scope="col">Employee Id</th>
                   <th scope="col">Name</th>
                   <th scope="col">Email</th>
@@ -131,31 +135,35 @@ const EmployeeView = () => {
                 </tr>
               </thead>
               <tbody>
-                {(searchTerm ? filteredEmployees : initValue).map((e) => (
-                  <tr key={e.user_id}>
-                    <td>{e.user_id}</td>
-                    <td>
-                      {e.first_name} {e.last_name}
-                    </td>
-                    <td>{e.email}</td>
-                    <td>{e.role_name}</td>
-                    <td>
-                      <Button
-                        variant="primary"
-                        className="me-2"
-                        onClick={() => handleUpdate(e)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="danger"
-                        onClick={() => handleDelete(e.user_id)}
-                      >
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
+                {(searchTerm ? filteredEmployees : initValue).map((e) => {
+                  noUrut += 1
+                  return (
+                    <tr key={e.user_id}>
+                      <td>{noUrut}</td>
+                      <td>{e.user_id}</td>
+                      <td>
+                        {e.first_name} {e.last_name}
+                      </td>
+                      <td>{e.email}</td>
+                      <td>{e.role_name}</td>
+                      <td>
+                        <Button
+                          variant="primary"
+                          className="me-2"
+                          onClick={() => handleUpdate(e)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => handleDelete(e.user_id)}
+                        >
+                          Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

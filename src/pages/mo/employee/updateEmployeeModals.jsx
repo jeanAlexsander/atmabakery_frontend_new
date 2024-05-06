@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchRoleData,
   hideUpdateEmployeeModal,
+  setCancelEditEmployee,
   updateEmployeeData,
 } from "../../../store/employee";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -15,6 +16,7 @@ function ModalUpdateEmployees() {
   const data = useSelector((state) => state.employeeStore.editEmployeeData);
   const role = useSelector((state) => state.employeeStore.role);
 
+
   const roleRef = useRef(null);
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
@@ -22,6 +24,9 @@ function ModalUpdateEmployees() {
 
   useEffect(() => {
     if (data) {
+      if (roleRef.current) {
+        roleRef.current.value = data.role_id;
+      }
       if (firstNameRef.current) {
         firstNameRef.current.value = data.first_name;
       }
@@ -31,15 +36,13 @@ function ModalUpdateEmployees() {
       if (emailRef.current) {
         emailRef.current.value = data.email;
       }
-      if (roleRef.current) {
-        roleRef.current.value = data.role_id;
-      }
     }
   }, [data]);
 
   const dispatch = useDispatch();
 
   const handleClose = () => {
+    dispatch(setCancelEditEmployee());
     dispatch(hideUpdateEmployeeModal());
   };
 

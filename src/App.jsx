@@ -25,12 +25,27 @@ import ChangePasswordAdmin from "./pages/admin/ChangePasswordAdmin/ChangePasswor
 import SalaryView from "./pages/owner/salary/owner.jsx";
 // import CustomerView from "./pages/admin/customers/customers.jsx";
 import HampersAdminView from "./pages/admin/hampers/hampers.jsx";
+import EmployeeView from "./pages/mo/employee/employee.jsx";
+import PromoPointView from "./pages/admin/promoPoint/promoPoint.jsx";
+import PurchaseIngredientView from "./pages/mo/purchaseIngredient/purchaseIngredient.jsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Login />
+  },
+  {
+    path: "/register",
+    element: <Register />
+  },
+  
+])
+
 
 function App() {
   return (
-    <Router>
-      <PresensiView />
-    </Router>
+    <RouterProvider router={router} />
   );
 }
 
