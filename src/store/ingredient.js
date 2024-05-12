@@ -42,7 +42,8 @@ const ingredientSlice = createSlice({
         },
         setCancelEditIngredient: (state) => {
             state.editIngredientData = {};
-        }
+        },
+        
     }
 });
 

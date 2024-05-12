@@ -9,10 +9,17 @@ import {
 } from "cdbreact";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
-import Button from 'react-bootstrap/Button';
+import { NavLink, useNavigate } from "react-router-dom";
+import Button from "react-bootstrap/Button";
 
 const OwnerSideBar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   return (
     <div
       style={{ display: "flex", height: "100vh", overflow: "scroll initial" }}
@@ -33,29 +40,7 @@ const OwnerSideBar = () => {
             <NavLink exact to="/" activeClassName="activeClicked">
               <CDBSidebarMenuItem>
                 <FontAwesomeIcon icon={faUsers} className="icon-margin me-3" />{" "}
-                Employees
-              </CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/tables" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="table">Roles</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/profile" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="user">Custodians</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/analytics" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="chart-line">
-                Analytics
-              </CDBSidebarMenuItem>
-            </NavLink>
-
-            <NavLink
-              exact
-              to="/hero404"
-              target="_blank"
-              activeClassName="activeClicked"
-            >
-              <CDBSidebarMenuItem icon="exclamation-circle">
-                404 page
+                Salary
               </CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>
@@ -70,7 +55,9 @@ const OwnerSideBar = () => {
             Sidebar Footer
           </div>
           <div>
-            <Button variant="danger" className="mb-3">Logout</Button>
+            <Button variant="danger" className="mb-3" onClick={handleLogout}>
+              Logout
+            </Button>
           </div>
         </CDBSidebarFooter>
       </CDBSidebar>

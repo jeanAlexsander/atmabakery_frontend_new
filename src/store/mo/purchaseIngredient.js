@@ -9,7 +9,8 @@ const purchaseIngredientSlice = createSlice({
         deletePurchaseIngredientModal: false,
         purchaseIngredientData: [],
         deleteId: null,
-        editPurchaseIngredientData: {}
+        editPurchaseIngredientData: {},
+        dataIngredient: []
     },
     reducers: {
         showAddPurchaseIngredientModal: (state) => {
@@ -31,7 +32,7 @@ const purchaseIngredientSlice = createSlice({
             state.deletePurchaseIngredientModal = false;
         },
         setPurchaseIngredientData: (state, action) => {
-            state.purchaseIngredientData = [...action.payload.data];
+            state.purchaseIngredientData =[... action.payload.data];
         },
         setDeletePurchaseIngredientId: (state, action) => {
             state.deleteId = action.payload.id;
@@ -42,6 +43,9 @@ const purchaseIngredientSlice = createSlice({
         },
         setCancelEditPurchaseIngredient: (state) => {
             state.editPurchaseIngredientData = {};
+        },
+        setDataIngredient: (state, action) => {
+            state.dataIngredient = [...action.payload.data];
         }
     }
 });
@@ -49,12 +53,11 @@ const purchaseIngredientSlice = createSlice({
 export const fetchPurchaseIngredientsData = () => {
     return async (dispatch) => {
         async function fetchDataDatabase() {
-            const response = await fetch(`${URL}get-purchaseIngredients`);
+            const response = await fetch(`${URL}get-purchase-ingredient`);
             if (!response.ok) {
                 throw new Error("Something went wrong!");
             }
             const data = await response.json();
-            console.log(data)
             return data.data;
         }
 
@@ -66,6 +69,55 @@ export const fetchPurchaseIngredientsData = () => {
         }
     };
 };
+
+export const fetchPurchaseIngredientsModal = () => {
+    return async (dispatch) => {
+        async function fetchDataDatabase() {
+            const response = await fetch(`${URL}get-purchaseIngredients`);
+            if (!response.ok) {
+                throw new Error("Something went wrong!");
+            }
+            const data = await response.json();
+            return data.data;
+        }
+
+        try {
+            const data = await fetchDataDatabase();
+            dispatch(setDataIngredient({ data }));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+};
+
+
+export const addDataToPurchaseIngredent = (data) => {
+    const inputData = data;
+    console.log(inputData)
+    return async (dispatch) => {
+        async function fetchDataDatabase() {
+            const response = await fetch(`${URL}add-purchase-ingredient`, {
+                method: "POST",
+                body: JSON.stringify(inputData),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (!response.ok) {
+                throw new Error("Something went wrong!");
+            }
+            const data = await response.json();
+            return data.data;
+        }
+
+        try {
+            await fetchDataDatabase();
+            dispatch(fetchPurchaseIngredientsData());
+        } catch (error) {
+            console.log(error);
+        }
+    };
+}
 
 export const addPurchaseIngredientData = (data) => {
     const inputData = data
@@ -102,7 +154,7 @@ export const deletePurchaseIngredientData = (id) => {
     console.log(id)
     return async (dispatch) => {
         async function deleteDataFromDatabase() {
-            const response = await fetch(`${URL}delete-purchaseIngredients/${id}`, {
+            const response = await fetch(`${URL}delete-purchase-ingredient/${id}`, {
                 method: "DELETE",
             });
             if (!response.ok) {
@@ -125,7 +177,7 @@ export const updatePurchaseIngredientData = (data) => {
     const inputData = data
     return async (dispatch) => {
         async function updateDataDatabase() {
-            const response = await fetch(`${URL}update-purchaseIngredients/${inputData.ingredient_id}`, {
+            const response = await fetch(`${URL}update-purchase-ingredient/${inputData.purchase_id}`, {
                 method: "PUT",
                 body: JSON.stringify(inputData),
                 headers: {
@@ -148,6 +200,6 @@ export const updatePurchaseIngredientData = (data) => {
     };
 };
 
-export const { showAddPurchaseIngredientModal, hideAddPurchaseIngredientModal, hideUpdatePurchaseIngredientModal, showUpdatePurchaseIngredientModal, hideDeletePurchaseIngredientModal, showDeletePurchaseIngredientModal, setPurchaseIngredientData, setDeletePurchaseIngredientId, setEditPurchaseIngredientData, setCancelEditPurchaseIngredient } = purchaseIngredientSlice.actions;
+export const { showAddPurchaseIngredientModal, hideAddPurchaseIngredientModal, hideUpdatePurchaseIngredientModal, showUpdatePurchaseIngredientModal, hideDeletePurchaseIngredientModal, showDeletePurchaseIngredientModal, setPurchaseIngredientData, setDeletePurchaseIngredientId, setEditPurchaseIngredientData, setCancelEditPurchaseIngredient, setDataIngredient } = purchaseIngredientSlice.actions;
 
 export default purchaseIngredientSlice;

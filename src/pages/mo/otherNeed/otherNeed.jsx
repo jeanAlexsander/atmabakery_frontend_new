@@ -14,7 +14,7 @@ import {
   showDeleteOtherNeedModal,
   fetchOtherNeedData,
   setDeleteOtherNeedId,
-  setEditOtherNeedData
+  setEditOtherNeedData,
 } from "../../../store/mo/otherNeed";
 
 const OtherNeedView = () => {
@@ -31,10 +31,10 @@ const OtherNeedView = () => {
     const temp = initValue.filter(
       (o) =>
         o.name.toLowerCase().includes(lowerCek) ||
-        o.cost.toLowerCase().includes(lowerCek) ||
+        String(o.cost).includes(lowerCek) ||
         String(o.date).includes(lowerCek)
     );
-    console.log(temp)
+    console.log(temp);
     setFilteredIngredients(temp);
   };
 
@@ -52,16 +52,15 @@ const OtherNeedView = () => {
   };
 
   const handleDelete = (id) => {
-    console.log(id)
+    console.log(id);
     dispatch(setDeleteOtherNeedId({ id }));
     dispatch(showDeleteOtherNeedModal());
-  }
+  };
 
   const handleEdit = (otherNeed) => {
-    dispatch(setEditOtherNeedData({ otherNeed }))
-    dispatch(showUpdateOtherNeedModal())
-  }
-
+    dispatch(setEditOtherNeedData({ otherNeed }));
+    dispatch(showUpdateOtherNeedModal());
+  };
 
   return (
     <div style={{ display: "flex" }}>
@@ -98,11 +97,7 @@ const OtherNeedView = () => {
               ref={searchRef}
               onChange={(o) => setSearchTerm(o.target.value)}
             />
-            <Button
-              variant="danger"
-              className="mb-2"
-              onClick={handleSearch}
-            >
+            <Button variant="danger" className="mb-2" onClick={handleSearch}>
               Search
             </Button>
           </div>
@@ -141,7 +136,7 @@ const OtherNeedView = () => {
               </thead>
               <tbody>
                 {(searchTerm ? filteredIngredient : initValue).map((o) => {
-                  noUrut += 1
+                  noUrut += 1;
                   return (
                     <tr key={o.other_need_id}>
                       <td>{noUrut}</td>

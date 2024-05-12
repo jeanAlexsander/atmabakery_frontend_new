@@ -1,7 +1,4 @@
-import MOSideBar from "../component/side_nav_bar";
-import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useRef, useEffect } from "react";
 import ModalAddIngredient from "./addIngredientModals";
@@ -14,11 +11,14 @@ import {
   showDeleteIngredientModal,
   fetchIngredientsData,
   setDeleteIngredientId,
-  setEditIngredientData
+  setEditIngredientData,
 } from "../../../store/ingredient";
+import AdminSideBar from "../../admin/component/side_navbar_admin";
 
 const IngredientView = () => {
-  const initValue = useSelector((state) => state.ingredientStore.ingredientData);
+  const initValue = useSelector(
+    (state) => state.ingredientStore.ingredientData
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredIngredient, setFilteredIngredients] = useState([]);
   const searchRef = useRef(null);
@@ -34,7 +34,7 @@ const IngredientView = () => {
         i.unit.toLowerCase().includes(lowerCek) ||
         String(i.amount).includes(lowerCek)
     );
-    console.log(temp)
+    console.log(temp);
     setFilteredIngredients(temp);
   };
 
@@ -52,19 +52,19 @@ const IngredientView = () => {
   };
 
   const handleDelete = (id) => {
-    console.log(id)
+    console.log(id);
     dispatch(setDeleteIngredientId({ id }));
     dispatch(showDeleteIngredientModal());
   };
 
   const handleEdit = (ingredient) => {
-    dispatch(setEditIngredientData({ ingredient }))
-    dispatch(showUpdateIngredientModal())
+    dispatch(setEditIngredientData({ ingredient }));
+    dispatch(showUpdateIngredientModal());
   };
 
   return (
     <div style={{ display: "flex" }}>
-      <MOSideBar />
+      <AdminSideBar />
       <ModalAddIngredient />
       <ModalUpdateIngredient />
       <ModalDeleteIngredient />
@@ -97,11 +97,7 @@ const IngredientView = () => {
               ref={searchRef}
               onChange={(i) => setSearchTerm(i.target.value)}
             />
-            <Button
-              variant="danger"
-              className="mb-2"
-              onClick={handleSearch}
-            >
+            <Button variant="danger" className="mb-2" onClick={handleSearch}>
               Search
             </Button>
           </div>
@@ -140,7 +136,7 @@ const IngredientView = () => {
               </thead>
               <tbody>
                 {(searchTerm ? filteredIngredient : initValue).map((i) => {
-                  noUrut += 1
+                  noUrut += 1;
                   return (
                     <tr key={i.ingredient_id}>
                       <td>{noUrut}</td>
@@ -150,7 +146,7 @@ const IngredientView = () => {
                       <td>{i.amount}</td>
                       <td>
                         <Button
-                          variant="primary"
+                          variant="secondary"
                           className="me-2 btn-md"
                           onClick={() => {
                             handleEdit(i);

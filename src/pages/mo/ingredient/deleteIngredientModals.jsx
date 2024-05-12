@@ -30,7 +30,7 @@ function ModalDeleteIngredient() {
           <Button variant="danger" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleDelete}>
+          <Button variant="success" onClick={handleDelete}>
             Delete
           </Button>
         </Modal.Footer>

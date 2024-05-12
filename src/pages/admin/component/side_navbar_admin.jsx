@@ -9,10 +9,16 @@ import {
 } from "cdbreact";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
-import Button from 'react-bootstrap/Button';
+import { NavLink, useNavigate } from "react-router-dom";
+import Button from "react-bootstrap/Button";
 
 const AdminSideBar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
   return (
     <div
       style={{ display: "flex", height: "100vh", overflow: "scroll initial" }}
@@ -30,32 +36,54 @@ const AdminSideBar = () => {
 
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
-            <NavLink exact to="/" activeClassName="activeClicked">
+            <NavLink exact to="/admin" activeClassName="activeClicked">
               <CDBSidebarMenuItem>
-                <FontAwesomeIcon icon={faUsers} className="icon-margin me-3" />{" "}
-                Employees
-              </CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/tables" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="table">Roles</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/profile" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="user">Custodians</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/analytics" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="chart-line">
-                Recipe
+                <FontAwesomeIcon icon={faUsers} className="icon-margin me-3" />
+                Promo Point
               </CDBSidebarMenuItem>
             </NavLink>
 
             <NavLink
               exact
-              to="/hero404"
-              target="_blank"
+              to="/admin/Product"
+              activeClassName="activeClicked"
+              onClick={() => {
+                navigate("/admin/Product");
+              }}
+            >
+              <CDBSidebarMenuItem icon="table">Product Data</CDBSidebarMenuItem>
+            </NavLink>
+
+            <NavLink exact to="/admin/Recipe" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="user">Recipe Data</CDBSidebarMenuItem>
+            </NavLink>
+
+            <NavLink
+              exact
+              to="/admin/Ingeredients"
               activeClassName="activeClicked"
             >
-              <CDBSidebarMenuItem icon="exclamation-circle">
-                Ingredient
+              <CDBSidebarMenuItem icon="chart-line">
+                Ingredients
+              </CDBSidebarMenuItem>
+            </NavLink>
+
+            <NavLink exact to="/admin/customer" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="chart-line">
+                Customer
+              </CDBSidebarMenuItem>
+            </NavLink>
+
+            <NavLink exact to="/admin/Hampers" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="chart-line">Hampers</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/admin/changepassword"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Change Password
               </CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>
@@ -70,7 +98,9 @@ const AdminSideBar = () => {
             Sidebar Footer
           </div>
           <div>
-            <Button variant="danger" className="mb-3">Logout</Button>
+            <Button variant="danger" className="mb-3" onClick={handleLogout}>
+              Logout
+            </Button>
           </div>
         </CDBSidebarFooter>
       </CDBSidebar>

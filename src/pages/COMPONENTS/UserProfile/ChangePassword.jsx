@@ -1,33 +1,29 @@
-import React from 'react'
+import React from "react";
+import { URL } from "../../../../constants";
 
-const ChangePassword = () => {
-    return (
-        <>
-        <div className='accountsettings'>
-            <h1 className='mainhead1'>Change Password</h1>
+const ChangePasswordAdmin = () => {
+  const handleSendEmail = () => {
+    async function send() {
+      const response = await fetch(`${URL}change-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: localStorage.getItem("email") }),
+      });
+    }
 
-            <div className='form'>
-                <div className='form-group'>
-                    <label htmlFor='oldpass'>Old Password <span>*</span></label>
-                    <input type="password"
-                    />
-                </div>
+    async function sending() {
+      try {
+        await send();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    sending();
+  };
 
-                <div className='form-group'>
-                    <label htmlFor='newpass'>New Password <span>*</span></label>
-                    <input type="password"
-                    />
-                </div>
+  return <button onClick={handleSendEmail}>send email</button>;
+};
 
-
-            </div>
-
-            <button className='mainbutton1'
-
-            >Save Changes</button>
-        </div>
-        </>
-    )
-}
-
-export default ChangePassword;
+export default ChangePasswordAdmin;

@@ -23,6 +23,7 @@ function ModalUpdateProduk() {
   const nameRef = useRef(null);
   const priceRef = useRef(null);
   const quantityRef = useRef(null);
+  const custodianRef = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -48,6 +49,9 @@ function ModalUpdateProduk() {
       if (categoryRef.current) {
         categoryRef.current.value = data.category_id;
       }
+      if (custodianRef.current) {
+        custodianRef.current.value = data.custodian_id;
+      }
     }
   }, [data]);
 
@@ -57,6 +61,7 @@ function ModalUpdateProduk() {
     const quantity = quantityRef.current.value;
     const image = imageRef.current.files[0];
     const category_id = categoryRef.current.value;
+    const custodian_id = custodianRef.current.value;
 
     const formData = new FormData();
     formData.append("name", name);
@@ -64,6 +69,9 @@ function ModalUpdateProduk() {
     formData.append("quantity", quantity);
     formData.append("image", image);
     formData.append("category_id", category_id);
+    if (custodian_id !== "") {
+      formData.append("custodian_id", custodian_id);
+    }
 
     const dataUpdate = {
       id: data.product_id,
@@ -109,6 +117,18 @@ function ModalUpdateProduk() {
                   placeholder="enter Quantity"
                   autoFocus
                   ref={quantityRef}
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>Id Custodian</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="id custodian"
+                  autoFocus
+                  ref={custodianRef}
                 />
               </Form.Group>
             </Form.Group>

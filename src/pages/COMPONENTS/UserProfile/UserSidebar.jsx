@@ -14,7 +14,7 @@ const UserSidebar = () => {
 
   return (
     <div className="usersidebar">
-      { indexVal === 1 ? (
+      {indexVal === 1 ? (
         <div
           className="s2"
           onClick={() => {
@@ -38,7 +38,7 @@ const UserSidebar = () => {
           <span>Account Settings</span>
         </div>
       ) : (
-        <Link to="/user/accountsettings" className="stylenone">
+        <Link className="stylenone">
           <div
             className="s1"
             onClick={() => {
@@ -93,7 +93,7 @@ const UserSidebar = () => {
           <span>Change Password</span>
         </div>
       ) : (
-        <Link to="/user/changepassword" className="stylenone">
+        <Link className="stylenone">
           <div
             className="s1"
             onClick={() => {
@@ -148,7 +148,7 @@ const UserSidebar = () => {
           <span>Your Orders</span>
         </div>
       ) : (
-        <Link to="/user/yourorders" className="stylenone">
+        <Link className="stylenone">
           <div
             className="s1"
             onClick={() => {
@@ -204,7 +204,7 @@ const UserSidebar = () => {
           <span>Address</span>
         </div>
       ) : (
-        <Link to="/user/address" className="stylenone">
+        <Link className="stylenone">
           <div
             className="s1"
             onClick={() => {
@@ -234,7 +234,7 @@ const UserSidebar = () => {
           </div>
         </Link>
       )}
-      { indexVal === 5 ? (
+      {indexVal === 5 ? (
         <div
           className="s2"
           onClick={() => {
@@ -259,7 +259,7 @@ const UserSidebar = () => {
           <span>Legal Notice</span>
         </div>
       ) : (
-        <Link to="/user/legalnotice" className="stylenone">
+        <Link className="stylenone">
           <div
             className="s1"
             onClick={() => {

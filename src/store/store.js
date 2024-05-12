@@ -14,6 +14,8 @@ import salarySlice from "./owner/salary";
 // import moProfileSlice from "./mo/profilemo";
 import promoPointSlice from "./admin/promoPoint";
 import purchaseIngredientSlice from "./mo/purchaseIngredient";
+import historySLice  from "./customer/history";
+import customerAdminSlice from "./admin/customer";
 
 export const store = configureStore({
     reducer: {
@@ -27,7 +29,12 @@ export const store = configureStore({
         ingredientStore: ingredientSlice.reducer,
         otherNeedStore: otherNeedSlice.reducer,
         promoPointStore: promoPointSlice.reducer,
-        purchaseIngredientStore: purchaseIngredientSlice.reducer
+        purchaseIngredientStore: purchaseIngredientSlice.reducer,
+        salaryStore: salarySlice.reducer,
+        produkStore: produkSlice.reducer,
+        hampersStore: hampersSlice.reducer,
+        historyStore: historySLice.reducer,
+        customerAdminStore: customerAdminSlice.reducer
     }
     
 });

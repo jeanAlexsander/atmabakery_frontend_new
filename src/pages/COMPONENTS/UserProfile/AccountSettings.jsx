@@ -1,25 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import './AccountSettings.css';
-import { Toaster, toast } from 'sonner';
-import { Spinner } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from "react";
+import { Spinner } from "react-bootstrap";
+import { URL } from "../../../../constants";
 
 const AccountSettings = () => {
   const [isLoadingUserData, setIsLoadingUserData] = useState(true);
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
-  const [userData, setUserData] = useState({});
   const [isEditable, setIsEditable] = useState(false);
 
-  useEffect(() => {
-    const user = sessionStorage.getItem('user');
-    setUserData(JSON.parse(user));
-    setIsLoadingUserData(false);
-  }, []);
+  const emailRef = useRef(null);
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const firstname = localStorage.getItem("first_name");
+  const lastname = localStorage.getItem("last_name");
+  const email = localStorage.getItem("email");
+  const user_id = localStorage.getItem("user_id");
 
-  const logoutBtnHandler = () => {
-    sessionStorage.clear();
-    // navigate("/");
-    toast.success('Berhasil Logout');
-  };
+  useEffect(() => {
+    if (firstNameRef.current) {
+      firstNameRef.current.value = firstname;
+    }
+    if (lastNameRef.current) {
+      lastNameRef.current.value = lastname;
+    }
+    if (emailRef.current) {
+      emailRef.current.value = email;
+    }
+  }, []);
 
   const editBtnHandler = () => {
     setIsEditable(!isEditable);
@@ -29,177 +35,128 @@ const AccountSettings = () => {
     e.preventDefault();
     setIsLoadingUpdate(true);
 
-    // Simpan perubahan ke server
-    // Misalnya, Anda bisa menggunakan fetch atau axios untuk mengirim data ke server
-    // Gantilah URL dan method sesuai dengan API Anda
-    fetch('http://example.com/api/update-profile', {
-      method: 'PUT',
+    const updatedUserData = {
+      email: emailRef.current.value,
+      first_name: firstNameRef.current.value,
+      last_name: lastNameRef.current.value,
+    };
+
+    console.log(URL + "update-users/" + user_id);
+    fetch(URL + "update-users/" + user_id, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify(updatedUserData),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Gagal melakukan update profil");
+        }
+        return response.json();
+      })
       .then((data) => {
-        toast.success('Berhasil Update Data Profil Anda');
         setIsLoadingUpdate(false);
         setIsEditable(false);
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast.error('Gagal melakukan update profil');
+        console.error("Error:", error);
         setIsLoadingUpdate(false);
       });
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("email");
+    localStorage.removeItem("first_name");
+    localStorage.removeItem("last_name");
+  };
+
   return (
     <div className="profile-container">
-      {isLoadingUserData ? (
-        <Spinner
-          size="lg"
-          className="d-flex justify-content-center"
-          animation="border"
-          variant="success"
-        />
-      ) : (
-        <>
-          <div className="profile-img">
-            {/* <img
-              src={
-                userData?.profile_img === "data:image/;base64,"
-                  ? profileImg
-                  : userData?.profile_img
-              }
-              className="profile_image"
-              alt=""
-              width={"300px"}
-            /> */}
-
-            <div className="d-flex justify-content-center mt-2">
-              <button
-                type="button"
-                className="btn btn-primary"
-                // onClick={handleShow}
-              >
-                Edit Foto Profil
-              </button>
-            </div>
+      <>
+        <div className="profile-img">
+          <div className="d-flex justify-content-center mt-2">
+            <button type="button" className="btn btn-primary">
+              Edit Foto Profil
+            </button>
           </div>
-          <div>
-            <h2>Profil Anda</h2>
+        </div>
+        <div>
+          <h2>Profil Anda</h2>
 
-            <form onSubmit={handleSubmit}>
-              <div className="d-flex flex-column gap-2">
-                <div className="d-flex gap-2">
-                  <div className="col-6">
-                    <label htmlFor="firstname">First Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      disabled={!isEditable}
-                      name="firstname"
-                      placeholder="Firstname"
-                      value={userData?.firstname}
-                      onChange={(e) =>
-                        setUserData((prev) => ({
-                          ...prev,
-                          firstname: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="col-6">
-                    <label htmlFor="lastname">Last Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      disabled={!isEditable}
-                      value={userData?.lastname}
-                      name="lastname"
-                      placeholder="Lastname"
-                      onChange={(e) =>
-                        setUserData((prev) => ({
-                          ...prev,
-                          lastname: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                </div>
-                <label htmlFor="email">Email</label>
-                <input
-                  type="text"
-                  size={80}
-                  className="form-control"
-                  name="email"
-                  disabled
-                  placeholder="Email"
-                  value={userData?.email}
-                  onChange={(e) =>
-                    setUserData((prev) => ({
-                      ...prev,
-                      email: e.target.value,
-                    }))
-                  }
-                />
-                <label htmlFor="username">Username</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  disabled={!isEditable}
-                  name="username"
-                  placeholder="Username"
-                  value={userData?.username}
-                  onChange={(e) =>
-                    setUserData((prev) => ({
-                      ...prev,
-                      username: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-
-              <div className="d-flex justify-content-between mt-4">
-                <div className="d-flex gap-2">
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    onClick={editBtnHandler}
-                  >
-                    {isEditable ? 'Batal' : 'Edit'}
-                  </button>
-                  <button
-                    type="submit"
-                    className="btn btn-success"
+          <form onSubmit={handleSubmit}>
+            <div className="d-flex flex-column gap-2">
+              <div className="d-flex gap-2">
+                <div className="col-6">
+                  <label htmlFor="firstname">First Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
                     disabled={!isEditable}
-                  >
-                    {isLoadingUpdate ? (
-                      <Spinner
-                        animation="border"
-                        variant="light"
-                        size="sm"
-                      />
-                    ) : (
-                      'Simpan'
-                    )}
-                  </button>
+                    name="firstname"
+                    placeholder="Firstname"
+                    ref={firstNameRef}
+                  />
                 </div>
-
-                <div>
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    onClick={logoutBtnHandler}
-                  >
-                    Logout
-                  </button>
+                <div className="col-6">
+                  <label htmlFor="lastname">Last Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    disabled={!isEditable}
+                    name="lastname"
+                    placeholder="Lastname"
+                    ref={lastNameRef}
+                  />
                 </div>
               </div>
-            </form>
-          </div>
-        </>
-      )}
-      <Toaster position="top-right" reverseOrder={false} />
+              <label htmlFor="email">Email</label>
+              <input
+                type="text"
+                size={80}
+                className="form-control"
+                name="email"
+                disabled
+                placeholder="Email"
+                ref={emailRef}
+              />
+            </div>
+
+            <div className="d-flex justify-content-between mt-4">
+              <div className="d-flex gap-2">
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={editBtnHandler}
+                >
+                  {isEditable ? "Batal" : "Edit"}
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-success"
+                  disabled={!isEditable}
+                >
+                  {isLoadingUpdate ? (
+                    <Spinner animation="border" variant="light" size="sm" />
+                  ) : (
+                    "Simpan"
+                  )}
+                </button>
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </>
     </div>
   );
 };

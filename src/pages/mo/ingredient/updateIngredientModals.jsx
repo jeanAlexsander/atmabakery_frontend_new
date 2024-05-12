@@ -76,7 +76,7 @@ function ModalUpdateIngredient() {
           <Button variant="danger" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSaveChanges}>
+          <Button variant="success" onClick={handleSaveChanges}>
             Save Changes
           </Button>
         </Modal.Footer>

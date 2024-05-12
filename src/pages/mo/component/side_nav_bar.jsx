@@ -9,10 +9,16 @@ import {
 } from "cdbreact";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
-import Button from 'react-bootstrap/Button';
+import { NavLink, useNavigate } from "react-router-dom";
+import Button from "react-bootstrap/Button";
 
 const MOSideBar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
   return (
     <div
       style={{ display: "flex", height: "100vh", overflow: "scroll initial" }}
@@ -20,42 +26,39 @@ const MOSideBar = () => {
       <CDBSidebar textColor="#fff" backgroundColor="#333">
         <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
           <a
-            href="/"
+            href="/mo/"
             className="text-decoration-none"
             style={{ color: "inherit" }}
           >
-            Manajer Operasional
+            Manager Operational
           </a>
         </CDBSidebarHeader>
 
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
-            <NavLink exact to="/" activeClassName="activeClicked">
+            <NavLink exact to="/mo" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="table">Position</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink exact to="/mo/employee" activeClassName="activeClicked">
               <CDBSidebarMenuItem>
                 <FontAwesomeIcon icon={faUsers} className="icon-margin me-3" />{" "}
                 Employees
               </CDBSidebarMenuItem>
             </NavLink>
-            <NavLink exact to="/tables" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="table">Roles</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/profile" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="user">Custodians</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/analytics" activeClassName="activeClicked">
+
+            <NavLink exact to="/mo/Custodians" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="chart-line">
-                Recipe
+                Custodians
               </CDBSidebarMenuItem>
             </NavLink>
 
-            <NavLink
-              exact
-              to="/hero404"
-              target="_blank"
-              activeClassName="activeClicked"
-            >
-              <CDBSidebarMenuItem icon="exclamation-circle">
-                Ingredient
+            <NavLink exact to="/mo/Purchase" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="user">Purchase</CDBSidebarMenuItem>
+            </NavLink>
+
+            <NavLink exact to="/mo/otherNeed" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="chart-line">
+                Other Need
               </CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>
@@ -70,7 +73,9 @@ const MOSideBar = () => {
             Sidebar Footer
           </div>
           <div>
-            <Button variant="danger" className="mb-3">Logout</Button>
+            <Button variant="danger" className="mb-3" onClick={handleLogout}>
+              Logout
+            </Button>
           </div>
         </CDBSidebarFooter>
       </CDBSidebar>

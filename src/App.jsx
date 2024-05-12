@@ -1,52 +1,97 @@
-import { useState } from "react";
-// import { Routes, Router } from "react-router-dom";
-
 import Login from "./pages/login/Login.jsx";
 import Register from "./pages/register/Register.jsx";
 import "./App.css";
-import { BrowserRouter as Router } from "react-router-dom";
-import PositionView from "./pages/mo/position/position.jsx";
-import PresensiView from "./pages/mo/presensi/presensi.jsx";
-import CustodianView from "./pages/mo/custodians/custodian.jsx";
-import IngredientView from "./pages/mo/ingredient/ingredient.jsx";
-import OtherNeedView from "./pages/mo/otherNeed/otherNeed.jsx";
-import EmployeeView from "./pages/mo/employee/employee.jsx";
-import HampersAdminView from "./pages/admin/hampers/hampers.jsx";
-import ProdukAdminView from "./pages/admin/produk/produk.jsx";
-import Home from "./pages/HomePage/Home.jsx";
-import RecipeAdminView from "./pages/admin/recipe/recipe_admin.jsx";
-//import EmployeeView from "./pages/mo/position/employee.jsx";
-import AccountSettings from "./pages/COMPONENTS/UserProfile/AccountSettings.jsx";
-import UserProfile from "./pages/user/UserProfile.jsx";
-import MOProfile from "./pages/mo/MOProfile/MOProfile.jsx";
-import ChangePassword from "./pages/COMPONENTS/UserProfile/ChangePassword.jsx";
-import ChangePasswordMO from "./pages/mo/ChangePassword/ChangePasswordMO.jsx";
-import ChangePasswordAdmin from "./pages/admin/ChangePasswordAdmin/ChangePasswordAdmin.jsx";
-import SalaryView from "./pages/owner/salary/owner.jsx";
-// import CustomerView from "./pages/admin/customers/customers.jsx";
-import HampersAdminView from "./pages/admin/hampers/hampers.jsx";
-import EmployeeView from "./pages/mo/employee/employee.jsx";
-import PromoPointView from "./pages/admin/promoPoint/promoPoint.jsx";
-import PurchaseIngredientView from "./pages/mo/purchaseIngredient/purchaseIngredient.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import PromoPointView from "./pages/admin/promoPoint/promoPoint.jsx";
+import PositionView from "./pages/mo/position/position.jsx";
+import SalaryView from "./pages/owner/salary/owner.jsx";
+import UserProfile from "./pages/user/UserProfile.jsx";
+import ProdukAdminView from "./pages/admin/produk/produk.jsx";
+import RecipeAdminView from "./pages/admin/recipe/recipe_admin.jsx";
+import IngredientView from "./pages/mo/ingredient/ingredient.jsx";
+import HampersAdminView from "./pages/admin/hampers/hampers.jsx";
+import EmployeeView from "./pages/mo/employee/employee.jsx";
+import PurchaseIngredientView from "./pages/mo/purchaseIngredient/purchaseIngredient.jsx";
+import OtherNeedView from "./pages/mo/otherNeed/otherNeed.jsx";
+import CustodianView from "./pages/mo/custodians/custodian.jsx";
+import ChangePasswordAdmin from "./pages/COMPONENTS/UserProfile/ChangePassword.jsx";
+import ChangePasswordCustomer from "./pages/COMPONENTS/change password/ChangePassword.jsx";
+import ChangePasswordAdminNew from "./pages/admin/change password admin/ChangePassword.jsx";
+import CustomerView from "./pages/admin/customers/customers.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Login />
+    element: <Login />,
   },
   {
     path: "/register",
-    element: <Register />
+    element: <Register />,
   },
-  
-])
-
+  {
+    path: "/admin",
+    element: <PromoPointView />,
+  },
+  {
+    path: "/admin/Hampers",
+    element: <HampersAdminView />,
+  },
+  {
+    path: "/admin/changePassword",
+    element: <ChangePasswordAdminNew />,
+  },
+  {
+    path: "/admin/Ingeredients",
+    element: <IngredientView />,
+  },
+  {
+    path: "/admin/Recipe",
+    element: <RecipeAdminView />,
+  },
+  {
+    path: "/admin/Product",
+    element: <ProdukAdminView />,
+  },
+  {
+    path: "/admin/customer",
+    element: <CustomerView />,
+  },
+  {
+    path: "/mo",
+    element: <PositionView />,
+  },
+  {
+    path: "/mo/employee",
+    element: <EmployeeView />,
+  },
+  {
+    path: "/mo/purchase",
+    element: <PurchaseIngredientView />,
+  },
+  {
+    path: "/mo/custodians",
+    element: <CustodianView />,
+  },
+  {
+    path: "/mo/otherNeed",
+    element: <OtherNeedView />,
+  },
+  {
+    path: "/owner",
+    element: <SalaryView />,
+  },
+  {
+    path: "/customer",
+    element: <UserProfile />,
+  },
+  {
+    path: "/changePasswordCustomer/:email",
+    element: <ChangePasswordCustomer />,
+  },
+]);
 
 function App() {
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

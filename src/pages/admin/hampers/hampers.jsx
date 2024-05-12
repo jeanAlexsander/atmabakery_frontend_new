@@ -76,7 +76,7 @@ const HampersAdminView = () => {
             flex: "1",
           }}
         >
-          <h4>Recipe</h4>
+          <h4>Hampers</h4>
           <div
             style={{
               display: "flex",
