@@ -21,11 +21,26 @@ import CustomerView from "./pages/admin/customers/customers.jsx";
 import OrderDistanceView from "./pages/admin/order distance/order_distance_view.jsx";
 import PaymentConfirmView from "./pages/admin/payment_confirm/paymentConfirm.jsx";
 import ConfirmOrderView from "./pages/mo/confirm order/confirm_order_view.jsx";
+import Home from "./pages/HomePage/Home.jsx";
+import HomeCarousels from "./pages/COMPONENTS/Carousels/HomeCarousels.jsx";
+import ProductPage from "./Product/ProductPage/ProductPage.jsx";
+import CakePage from "./Product/BakePage/CakePage.jsx";
+import BreadPage from "./Product/BreadPage/BreadPage.jsx";
+import DrinkPage from "./Product/DrinkPage/DrinkPage.jsx";
+import ConsignmentPage from "./Product/ConsignmentPage/ConsignmentPage.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "Login",
     element: <Login />,
+  },
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/Home",
+    element: <Home />
   },
   {
     path: "/register",
@@ -103,6 +118,31 @@ const router = createBrowserRouter([
     path: "/changePasswordCustomer/:email",
     element: <ChangePasswordCustomer />,
   },
+  {
+    path: '/homecarousel',
+    element: <HomeCarousels/>
+  },
+  {
+    path: '/productpage',
+    element: <ProductPage/>
+  },
+  {
+    path: '/cakepage',
+    element: <CakePage/>
+  },
+  {
+    path: '/breadpage',
+    element: <BreadPage/>
+  },
+  {
+    path: '/drinkpage',
+    element: <DrinkPage/>
+  },
+  {
+    path: '/consignmentpage',
+    element: <ConsignmentPage/>
+  }
+
 ]);
 
 function App() {

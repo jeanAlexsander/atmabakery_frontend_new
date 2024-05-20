@@ -5,7 +5,6 @@ import './Product_Sidebar.css'
 const Product_Sidebar = () => {
   return (
     <div className='product_sidebar'>
-        <CategorySidebar/>
         <AllProduct/>
     </div>
   )

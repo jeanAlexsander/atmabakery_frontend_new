@@ -3,6 +3,7 @@ import './Navbar.css'
 import logo from '../../IMAGES/logo.png'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { Link } from 'react-router-dom'
+import Login from '../../login/Login'
 const Navbar = ({ reloadnavbar }) => {
     const [cartquantity, setcartquantity] = useState(0)
 
@@ -64,7 +65,7 @@ const Navbar = ({ reloadnavbar }) => {
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            <Dropdown.Item href="/login">Login</Dropdown.Item>
+                            <Dropdown.Item href="/Login">Login</Dropdown.Item>
                             <Dropdown.Item href="/signup">Signup</Dropdown.Item>
                             <Dropdown.Item href="/user/accountsettings">Profile</Dropdown.Item>
                             <Dropdown.Item href="#">Logout</Dropdown.Item>
@@ -88,7 +89,7 @@ const Navbar = ({ reloadnavbar }) => {
                         <Dropdown.Item href="#/action-1">Cakes</Dropdown.Item>
                         <Dropdown.Item href="#/action-2">Breads</Dropdown.Item>
                         <Dropdown.Item href="#/action-3">Drinks</Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">consignment Products</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">Consignment Products</Dropdown.Item>
 
                     </Dropdown.Menu>
                 </Dropdown>

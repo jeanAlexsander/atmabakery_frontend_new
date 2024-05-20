@@ -63,10 +63,9 @@ const ProductCard = ({ data }) => {
       </div>
       <div className='s2'>
         <h3>
-          $ {
-            data.ProductPrice - (data.ProductPrice * data.ProductDiscount / 100)
-          }
-          <span>${data.ProductPrice}</span>
+          Rp. {
+            data.ProductPrice - (data.ProductPrice * data.ProductDiscount / 100)}.000
+          <span>Rp.{data.ProductPrice}.000</span>
         </h3>
         <p>{
           data.ProductName
