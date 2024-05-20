@@ -18,6 +18,9 @@ import ChangePasswordAdmin from "./pages/COMPONENTS/UserProfile/ChangePassword.j
 import ChangePasswordCustomer from "./pages/COMPONENTS/change password/ChangePassword.jsx";
 import ChangePasswordAdminNew from "./pages/admin/change password admin/ChangePassword.jsx";
 import CustomerView from "./pages/admin/customers/customers.jsx";
+import OrderDistanceView from "./pages/admin/order distance/order_distance_view.jsx";
+import PaymentConfirmView from "./pages/admin/payment_confirm/paymentConfirm.jsx";
+import ConfirmOrderView from "./pages/mo/confirm order/confirm_order_view.jsx";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +60,14 @@ const router = createBrowserRouter([
     element: <CustomerView />,
   },
   {
+    path: "/admin/orderdistance",
+    element: <OrderDistanceView />,
+  },
+  {
+    path: "/admin/paymentConfirm",
+    element: <PaymentConfirmView />,
+  },
+  {
     path: "/mo",
     element: <PositionView />,
   },
@@ -75,6 +86,10 @@ const router = createBrowserRouter([
   {
     path: "/mo/otherNeed",
     element: <OtherNeedView />,
+  },
+  {
+    path: "/mo/confirmOrder",
+    element: <ConfirmOrderView />,
   },
   {
     path: "/owner",

@@ -61,6 +61,15 @@ const MOSideBar = () => {
                 Other Need
               </CDBSidebarMenuItem>
             </NavLink>
+            <NavLink
+              exact
+              to="/mo/confirmOrder"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Confirm Order
+              </CDBSidebarMenuItem>
+            </NavLink>
           </CDBSidebarMenu>
         </CDBSidebarContent>
 

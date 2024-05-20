@@ -16,6 +16,9 @@ import promoPointSlice from "./admin/promoPoint";
 import purchaseIngredientSlice from "./mo/purchaseIngredient";
 import historySLice  from "./customer/history";
 import customerAdminSlice from "./admin/customer";
+import orderdistanceSlice from "./admin/orderdistance";
+import paymentConfirmSlice from "./admin/payment_confirm";
+import confirmOrderSlice from "./mo/confirm_order";
 
 export const store = configureStore({
     reducer: {
@@ -34,7 +37,9 @@ export const store = configureStore({
         produkStore: produkSlice.reducer,
         hampersStore: hampersSlice.reducer,
         historyStore: historySLice.reducer,
-        customerAdminStore: customerAdminSlice.reducer
+        customerAdminStore: customerAdminSlice.reducer,
+        orderdistanceStore: orderdistanceSlice.reducer,
+        paymentConfirmStore: paymentConfirmSlice.reducer,
+        confirmOrderStore: confirmOrderSlice.reducer,
     }
-    
 });

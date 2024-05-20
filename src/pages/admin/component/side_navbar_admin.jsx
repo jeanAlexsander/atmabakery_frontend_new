@@ -79,6 +79,15 @@ const AdminSideBar = () => {
             </NavLink>
             <NavLink
               exact
+              to="/admin/orderdistance"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                input order distance
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
               to="/admin/changepassword"
               activeClassName="activeClicked"
             >
