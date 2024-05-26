@@ -12,48 +12,67 @@ import {
 } from "../../../store/admin/payment_confirm";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Table } from "react-bootstrap";
+import {
+  cancelDate,
+  cancelTotalDelivery,
+  cancelTotalPrice,
+  cancelUserId,
+  confirmDistanceOrder,
+  fetchConfirmDistance,
+  hideUpdateModalDetail,
+  totalAddOnDelivery,
+} from "../../../store/admin/orderdistance";
 
-function ModalAddPaymentConfirm() {
+function OrderDistanceDetail() {
   const show = useSelector(
-    (state) => state.paymentConfirmStore.addPaymentConfirmModal
+    (state) => state.orderdistanceStore.showUpdateModalDetail
   );
 
   const data = useSelector(
-    (state) => state.paymentConfirmStore.paymentConfirmData
+    (state) => state.orderdistanceStore.orderdistanceData
   );
 
-  const date = useSelector((state) => state.paymentConfirmStore.setDateUser);
+  const date = useSelector((state) => state.orderdistanceStore.date);
 
-  const userId = useSelector((state) => state.paymentConfirmStore.setIdUser);
-
-  const priceRef = useRef(null);
+  const userId = useSelector((state) => state.orderdistanceStore.userId);
+  const totalDelivery = useSelector(
+    (state) => state.orderdistanceStore.totalDelivery
+  );
 
   const filterData = data.filter(
     (item) => item.user_id === userId && item.order_date === date
   );
 
-  const totalPrice = filterData.reduce((acc, item) => {
-    return acc + item.amount;
+  const totalPrice = useSelector(
+    (state) => state.orderdistanceStore.totalPrice
+  );
+
+  const allPrice = filterData.reduce((acc, item) => {
+    return acc + item.price;
   }, 0);
 
   const dispatch = useDispatch();
 
   const handleClose = () => {
-    dispatch(hideAddPaymentConfirmModal());
-    dispatch(setCancelDateUser());
+    dispatch(hideUpdateModalDetail());
+    dispatch(cancelUserId());
+    dispatch(cancelTotalDelivery());
+    dispatch(cancelTotalPrice());
+    dispatch(cancelDate());
   };
 
   const handleSave = () => {
     dispatch(setConfirmActionData({ data: filterData }));
     dispatch(showConfirmActionModal());
+    const totalDeliveryR = totalDelivery / 10;
+    dispatch(confirmDistanceOrder(filterData, totalDeliveryR));
+    dispatch(fetchConfirmDistance());
     handleClose();
   };
 
   React.useEffect(() => {
-    if (priceRef.current) {
-      priceRef.current.value = totalPrice;
-    }
-  }, [totalPrice]);
+    dispatch(totalAddOnDelivery(totalPrice));
+  }, [dispatch, totalPrice]);
 
   return (
     <>
@@ -89,21 +108,22 @@ function ModalAddPaymentConfirm() {
                       <td>{p.amount / p.price}</td>
                     </tr>
                   ))}
+                  <tr>
+                    <td colSpan="2">Total Delivery</td>
+                    <td></td>
+                    <td></td>
+                    <td>{totalDelivery}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan="2">Total Price</td>
+                    <td></td>
+                    <td></td>
+                    <td>{allPrice + totalDelivery / 10}</td>
+                  </tr>
                 </tbody>
               </Table>
             </div>
           </div>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Input Total Price</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="enter price"
-                autoFocus
-                ref={priceRef}
-              />
-            </Form.Group>
-          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={handleClose}>
@@ -118,4 +138,4 @@ function ModalAddPaymentConfirm() {
   );
 }
 
-export default ModalAddPaymentConfirm;
+export default OrderDistanceDetail;

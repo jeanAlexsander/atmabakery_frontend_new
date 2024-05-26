@@ -1,9 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import MOSideBar from "../component/side_nav_bar";
 import { Button } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  fetchDataMO,
+  fetchMODetailOrder,
   setConfirmData,
+  setOrderData,
   setRejectData,
   setShowConfirmModal,
   setShowRejectModal,
@@ -29,19 +32,28 @@ const ConfirmOrderView = () => {
   const handleConfirmOrder = (data) => {
     dispatch(setShowConfirmModal());
     dispatch(setConfirmData(data));
+    dispatch(fetchMODetailOrder(data));
+    dispatch(setOrderData({ data }));
   };
 
   const handleRejectOrder = (data) => {
     dispatch(setShowRejectModal());
+    dispatch(setConfirmData(data));
     dispatch(setRejectData(data));
+    dispatch(fetchMODetailOrder(data));
+    dispatch(setOrderData({ data }));
   };
+
+  useEffect(() => {
+    dispatch(fetchDataMO());
+  }, []);
 
   return (
     <div style={{ display: "flex" }}>
       <MOSideBar />
       <ModalConfirm />
       <ModalReject />
-      <IngredientConfirmOrderModal/>
+      <IngredientConfirmOrderModal />
       <div style={{ width: "100%", marginTop: "20px", marginLeft: "20px" }}>
         <div
           style={{
@@ -80,9 +92,7 @@ const ConfirmOrderView = () => {
                 <tr>
                   <th scope="col">Nomor</th>
                   <th scope="col">Name</th>
-                  <th scope="col">Product Name</th>
-                  <th scope="col">Quantity</th>
-                  <th scope="col">Total Price</th>
+                  <th scope="col">Date</th>
                   <th scope="col">Status</th>
                   <th scope="col">Action</th>
                   <th></th>
@@ -97,10 +107,17 @@ const ConfirmOrderView = () => {
                       <td>
                         {p.first_name} {p.last_name}
                       </td>
-                      <td>{p.product}</td>
-                      <td>{p.quantity}</td>
-                      <td>{p.price}</td>
-                      <td>{p.status}</td>
+                      <td>{p.order_date}</td>
+                      <td>
+                        {p.status_order ===
+                        "konfirmasi pembayaran oleh customer"
+                          ? "Pending"
+                          : p.status_order === "pesanan diproses"
+                          ? "Processed"
+                          : p.status_order === "pesanan ditolak"
+                          ? "Rejected"
+                          : p.status_order}
+                      </td>
                       <td>
                         <Button
                           variant="primary"
@@ -109,6 +126,10 @@ const ConfirmOrderView = () => {
                           onClick={() => {
                             handleConfirmOrder(p);
                           }}
+                          disabled={
+                            p.status_order !==
+                            "konfirmasi pembayaran oleh customer"
+                          }
                         >
                           Confirm
                         </Button>
@@ -119,6 +140,10 @@ const ConfirmOrderView = () => {
                           onClick={() => {
                             handleRejectOrder(p);
                           }}
+                          disabled={
+                            p.status_order !==
+                            "konfirmasi pembayaran oleh customer"
+                          }
                         >
                           Reject
                         </Button>

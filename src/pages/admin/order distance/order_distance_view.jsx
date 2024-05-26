@@ -1,42 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AdminSideBar from "../component/side_navbar_admin";
 import { Button } from "react-bootstrap";
 import {
+  fetchConfirmDistance,
+  setDate,
   setOpenUpdateOrderDistanceModal,
   setUpdateOrderDistanceData,
+  setUserId,
 } from "../../../store/admin/orderdistance";
 import UpdateDistanceModal from "./updateDistanceModal";
 import { Toaster, toast } from "sonner";
+import OrderDistanceDetail from "./order_distance_detail";
 
 const OrderDistanceView = () => {
-  const initValue = useSelector(
+  const dispatch = useDispatch();
+
+  const [uniqueUsers, setUniqueUsers] = useState([]);
+
+  const paymentConfirmData = useSelector(
     (state) => state.orderdistanceStore.orderdistanceData
   );
 
-  const toastMessage = () => {
-    toast.error("Data Updated");
-  };
+  useEffect(() => {
+    dispatch(fetchConfirmDistance());
+  }, []);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
-  const dispatch = useDispatch();
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = initValue.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = uniqueUsers.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleUpdateOrderDistance = (data) => {
+  const handleUpdateOrderDistance = (data, userId) => {
     dispatch(setUpdateOrderDistanceData({ data }));
     dispatch(setOpenUpdateOrderDistanceModal());
+    dispatch(setUserId({ id: data.user_id }));
+    dispatch(setDate({ date: data.order_date }));
   };
+
+  useEffect(() => {
+    if (Array.isArray(paymentConfirmData)) {
+      const uniqueUserData = [];
+      const uniqueUserIds = new Set();
+
+      paymentConfirmData.forEach((payment) => {
+        const { user_id, order_date } = payment;
+        const uniqueKey = `${user_id}_${order_date}`;
+        if (!uniqueUserIds.has(uniqueKey)) {
+          uniqueUserIds.add(uniqueKey);
+          uniqueUserData.push(payment);
+        }
+      });
+
+      setUniqueUsers(uniqueUserData);
+    }
+  }, [paymentConfirmData]);
 
   return (
     <div style={{ display: "flex" }}>
       <AdminSideBar />
       <UpdateDistanceModal />
+      <OrderDistanceDetail />
       <Toaster duration={3000} richColors />
       <div style={{ width: "100%" }}>
         <div
@@ -52,9 +80,7 @@ const OrderDistanceView = () => {
           }}
         >
           <h4>order distance</h4>
-          <Button variant="primary" onClick={toastMessage}>
-            cek toast
-          </Button>
+
           <div
             className="p-4 container-fluid"
             style={{
@@ -75,31 +101,32 @@ const OrderDistanceView = () => {
               <table className="table">
                 <thead>
                   <tr>
-                    <th scope="col">Customer ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">distance</th>
-                    <th scope="col">total payment</th>
-                    <th scope="col">action</th>
+                    <th>NO</th>
+                    <th>Name</th>
+                    <th>Order Date</th>
+                    <th>Delivery Option</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {currentItems.map((c) => {
+                  {currentItems.map((p, index) => {
                     return (
-                      <tr key={c.id}>
-                        <td>{c.user_id}</td>
+                      <tr key={index}>
+                        <td>{index + 1}</td>
                         <td>
-                          {c.first_name} {c.last_name}
+                          {p.first_name} {p.last_name}
                         </td>
-                        <td>{c.distance}</td>
-                        <td>{c.total_payment}</td>
+                        <td>{p.order_date}</td>
+                        <td>{p.delivery_option}</td>
                         <td>
                           <Button
-                            className="primary"
-                            onClick={() => {
-                              handleUpdateOrderDistance(c);
-                            }}
+                            variant="primary"
+                            className="me-2"
+                            onClick={() =>
+                              handleUpdateOrderDistance(p, p.user_id)
+                            }
                           >
-                            <i className="fas fa-edit"></i>
+                            Confirm
                           </Button>
                         </td>
                       </tr>
@@ -110,7 +137,9 @@ const OrderDistanceView = () => {
               <nav>
                 <ul className="pagination justify-content-center">
                   {[
-                    ...Array(Math.ceil(initValue.length / itemsPerPage)).keys(),
+                    ...Array(
+                      Math.ceil(currentItems.length / itemsPerPage)
+                    ).keys(),
                   ].map((number) => (
                     <li key={number} className="page-item">
                       <button

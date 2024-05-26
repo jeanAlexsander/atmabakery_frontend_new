@@ -5,8 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
+  cancelDate,
+  cancelTotalPrice,
+  cancelUserId,
   setCancelUpdateOrderDistance,
   setCloseUpdateOrderDistanceModal,
+  setTotalPrice,
+  setUserId,
+  showUpdateModalDetail,
 } from "../../../store/admin/orderdistance";
 
 function UpdateDistanceModal() {
@@ -15,7 +21,6 @@ function UpdateDistanceModal() {
     (state) => state.orderdistanceStore.updateOrderDistanceData
   );
 
-  console.log("masuk sini", data.distance);
   const totalDistanceRef = useRef(null);
 
   const dispatch = useDispatch();
@@ -29,12 +34,17 @@ function UpdateDistanceModal() {
   }, [data]);
 
   const handleSave = () => {
-    handleClose();
+    dispatch(setCancelUpdateOrderDistance());
+    dispatch(setCloseUpdateOrderDistanceModal());
+    dispatch(showUpdateModalDetail());
   };
 
   const handleClose = () => {
     dispatch(setCancelUpdateOrderDistance());
     dispatch(setCloseUpdateOrderDistanceModal());
+    dispatch(cancelUserId());
+    dispatch(cancelTotalPrice());
+    dispatch(cancelDate());
   };
 
   return (
@@ -46,12 +56,27 @@ function UpdateDistanceModal() {
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Rumah Jean"
+                autoFocus
+                disabled
+                value="Rumah Jean"
+              />
+            </Form.Group>
+          </Form>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Input Distance</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="enter Distance"
                 autoFocus
                 ref={totalDistanceRef}
+                onChange={(e) => {
+                  dispatch(setTotalPrice({ price: e.target.value }));
+                }}
               />
             </Form.Group>
           </Form>

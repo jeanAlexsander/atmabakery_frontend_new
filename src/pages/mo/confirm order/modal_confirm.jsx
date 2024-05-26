@@ -3,24 +3,28 @@ import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
+  fetchMissingIngredient,
   setCancelConfirmData,
+  setCancelDetailOrderData,
   setCloseConfirmModal,
   setShowIngredientConfirmModal,
 } from "../../../store/mo/confirm_order";
 
 function ModalConfirm() {
   const show = useSelector((state) => state.confirmOrderStore.showConfirmModal);
-  const p = useSelector((state) => state.confirmOrderStore.showConfirmData);
+  const data = useSelector((state) => state.confirmOrderStore.detailOrderData);
   const dispatch = useDispatch();
 
   const handleSave = () => {
     dispatch(setCloseConfirmModal());
+    dispatch(fetchMissingIngredient(data));
     dispatch(setShowIngredientConfirmModal());
   };
 
   const handleClose = () => {
     dispatch(setCloseConfirmModal());
     dispatch(setCancelConfirmData());
+    dispatch(setCancelDetailOrderData());
   };
 
   return (
@@ -39,21 +43,21 @@ function ModalConfirm() {
               <table className="table table-bordered">
                 <thead>
                   <tr>
-                    <th>Name</th>
+                    <th>Nomor</th>
                     <th>Product Name</th>
                     <th>Quantity</th>
-                    <th>Total Price</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr key={p.payment_confirm_id}>
-                    <td>
-                      {p.first_name} {p.last_name}
-                    </td>
-                    <td>{p.product}</td>
-                    <td>{p.quantity}</td>
-                    <td>{p.price}</td>
-                  </tr>
+                  {data.map((p, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{p.name}</td>
+                        <td>{p.amount / p.price}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

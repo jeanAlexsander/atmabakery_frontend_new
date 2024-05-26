@@ -19,6 +19,8 @@ import customerAdminSlice from "./admin/customer";
 import orderdistanceSlice from "./admin/orderdistance";
 import paymentConfirmSlice from "./admin/payment_confirm";
 import confirmOrderSlice from "./mo/confirm_order";
+import productViewSlice from "./customer/product_view";
+import paymentOrderSlice from "./customer/payment_order";
 
 export const store = configureStore({
     reducer: {
@@ -41,5 +43,7 @@ export const store = configureStore({
         orderdistanceStore: orderdistanceSlice.reducer,
         paymentConfirmStore: paymentConfirmSlice.reducer,
         confirmOrderStore: confirmOrderSlice.reducer,
+        productDataViewStore: productViewSlice.reducer,
+        paymentOrderCustomerStore: paymentOrderSlice.reducer
     }
 });

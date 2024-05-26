@@ -1,11 +1,11 @@
 import React from "react";
 import Footer2 from "../../pages/COMPONENTS/Footer/Footer2";
 import Navbar from "../../pages/COMPONENTS/Navbar/Navbar";
-import Product_Sidebar from "../../pages/COMPONENTS/Product/Product_Sidebar";
+import Product_Sidebar from "../../pages/COMPONENTS/Ready Stock/Product_Sidebar";
 import HomeCarousels from "../COMPONENTS/Carousels/HomeCarousels";
-import ProductBest_Sidebar from "../COMPONENTS/Product/ProductBest_Sidebar";
+import ProductBest_Sidebar from "../COMPONENTS/Ready Stock/ProductBest_Sidebar";
 
-const Home = () => {
+const ReadyStock = () => {
   return (
     <div>
       <Navbar reloadnavbar={false} />
@@ -28,4 +28,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default ReadyStock;

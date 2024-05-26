@@ -28,10 +28,11 @@ import CakePage from "./Product/BakePage/CakePage.jsx";
 import BreadPage from "./Product/BreadPage/BreadPage.jsx";
 import DrinkPage from "./Product/DrinkPage/DrinkPage.jsx";
 import ConsignmentPage from "./Product/ConsignmentPage/ConsignmentPage.jsx";
-
+import ReadyStock from "./pages/HomePage/ready_stock.jsx";
+import Cart from "./pages/COMPONENTS/Cart/Cart.jsx";
 const router = createBrowserRouter([
   {
-    path: "Login",
+    path: "/Login",
     element: <Login />,
   },
   {
@@ -39,8 +40,12 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/Home",
-    element: <Home />
+    path: "/readyStock",
+    element: <ReadyStock />,
+  },
+  {
+    path: "/cart",
+    element: <Cart />,
   },
   {
     path: "/register",
@@ -119,30 +124,29 @@ const router = createBrowserRouter([
     element: <ChangePasswordCustomer />,
   },
   {
-    path: '/homecarousel',
-    element: <HomeCarousels/>
+    path: "/homecarousel",
+    element: <HomeCarousels />,
   },
   {
-    path: '/productpage',
-    element: <ProductPage/>
+    path: "/productpage",
+    element: <ProductPage />,
   },
   {
-    path: '/cakepage',
-    element: <CakePage/>
+    path: "/cakepage",
+    element: <CakePage />,
   },
   {
-    path: '/breadpage',
-    element: <BreadPage/>
+    path: "/breadpage",
+    element: <BreadPage />,
   },
   {
-    path: '/drinkpage',
-    element: <DrinkPage/>
+    path: "/drinkpage",
+    element: <DrinkPage />,
   },
   {
-    path: '/consignmentpage',
-    element: <ConsignmentPage/>
-  }
-
+    path: "/consignmentpage",
+    element: <ConsignmentPage />,
+  },
 ]);
 
 function App() {

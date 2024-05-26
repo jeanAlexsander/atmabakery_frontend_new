@@ -1,47 +1,52 @@
 import React, { useEffect, useState } from "react";
-import ProductBestCard from "../Product/ProductBestCard";
+import ProductBestCard from "../Ready Stock/ProductBestCard";
 import cake1 from "../../IMAGES/cake1.png";
 import cake2 from "../../IMAGES/cake2.png";
 import cake3 from "../../IMAGES/cake3.png";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductViewData } from "../../../store/customer/product_view";
+import { fetchReadyProductViewData } from "../../../store/customer/product_view";
 
 const HomeCategories = () => {
   const dispatch = useDispatch();
   const initValue = useSelector(
-    (state) => state.productDataViewStore.productData
+    (state) => state.productDataViewStore.readyStockData
   );
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
-  const [count, setCount] = useState(0); // Menambahkan state count di sini
-
   useEffect(() => {
-    if (initValue.length === 0) {
-      dispatch(fetchProductViewData());
-    }
+    dispatch(fetchReadyProductViewData());
   }, []);
-
-  useEffect(() => {
-    setCount(0); // Reset nilai count ketika halaman berubah
-  }, [currentPage]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = initValue.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Mengubah halaman
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="allproducts" style={{ marginTop: "20px" }}>
-      <h1>Products</h1>
-      <div className="products">
-        {currentItems.map((item, index) => (
-          <ProductBestCard data={item} key={index} setCount={setCount} />
-        ))}
-      </div>
+      <h1>Ready Products Today's</h1>
+      {initValue.length > 0 && (
+        <div className="products">
+          {currentItems.map((item, index) => (
+            <ProductBestCard data={item} key={index} />
+          ))}
+        </div>
+      )}
+      {initValue.length === 0 && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100px",
+          }}
+        >
+          <h1>No Ready Product Today</h1>
+        </div>
+      )}
       <ul
         className="pagination"
         style={{ textAlign: "center", listStyle: "none", padding: 0 }}

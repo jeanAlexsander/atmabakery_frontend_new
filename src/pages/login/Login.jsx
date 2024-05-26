@@ -36,7 +36,7 @@ function Login() {
       localStorage.setItem("first_name", data.data[0].first_name);
       localStorage.setItem("last_name", data.data[0].last_name);
       localStorage.setItem("user_id", data.data[0].user_id);
-      
+      localStorage.setItem("total_point", data.data[0].total_point);
 
       if (data.data[0].role_name === "admin") {
         navigate("/admin");
@@ -45,7 +45,7 @@ function Login() {
       } else if (data.data[0].role_name === "owner") {
         navigate("/owner");
       } else if (data.data[0].role_name === "customer") {
-        navigate("/customer");
+        navigate("/");
       }
     } catch (err) {
       console.log(err);

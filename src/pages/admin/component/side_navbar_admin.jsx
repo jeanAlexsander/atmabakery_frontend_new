@@ -88,6 +88,15 @@ const AdminSideBar = () => {
             </NavLink>
             <NavLink
               exact
+              to="/admin/paymentConfirm"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Confrim Payment
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
               to="/admin/changepassword"
               activeClassName="activeClicked"
             >

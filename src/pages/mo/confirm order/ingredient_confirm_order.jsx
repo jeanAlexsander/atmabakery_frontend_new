@@ -2,25 +2,43 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { setCloseIngredientConfirmModal } from "../../../store/mo/confirm_order";
+import {
+  fetchMissingIngredient,
+  moConfirmOrder,
+  setCancelOrderData,
+  setCloseIngredientConfirmModal,
+} from "../../../store/mo/confirm_order";
+import { useEffect } from "react";
 
 function IngredientConfirmOrderModal() {
   const show = useSelector(
     (state) => state.confirmOrderStore.showIngredientConfirmModal
   );
   const data = useSelector(
-    (state) => state.confirmOrderStore.ingredientConfirmOrderData
+    (state) => state.confirmOrderStore.missingIngredientData
   );
+
+  const dataInput = useSelector(
+    (state) => state.confirmOrderStore.detailOrderData
+  );
+  const orderData = useSelector((state) => state.confirmOrderStore.orderData);
+
   const dispatch = useDispatch();
 
   let noUrut = 0;
 
+  useEffect(() => {
+    dispatch(fetchMissingIngredient(dataInput));
+  }, []);
+
   const handleSave = () => {
+    dispatch(moConfirmOrder(orderData));
     handleClose();
   };
 
   const handleClose = () => {
     dispatch(setCloseIngredientConfirmModal());
+    dispatch(setCancelOrderData());
   };
 
   return (
@@ -46,19 +64,32 @@ function IngredientConfirmOrderModal() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((p) => {
-                    noUrut++;
-                    return (
-                      <tr key={p.payment_confirm_id}>
-                        <td>{noUrut}</td>
-                        <td>{p.ingredient_name}</td>
-                        <td>{p.quantity}</td>
-                        <td>{p.unit}</td>
-                      </tr>
-                    );
-                  })}
+                  {data.length > 0 &&
+                    data.map((p) => {
+                      noUrut++;
+                      return (
+                        <tr key={p.ingredient_id}>
+                          <td>{noUrut}</td>
+                          <td>{p.ingredient_name}</td>
+                          <td>{p.quantity}</td>
+                          <td>{p.unit}</td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
+              {data.length === 0 && (
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  <h4>No Missing Ingredients</h4>
+                </div>
+              )}
             </div>
           </div>
         </Modal.Body>

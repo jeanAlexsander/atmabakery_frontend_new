@@ -6,25 +6,93 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ModalAddPaymentConfirm from "./addPaymentConfirmModals";
-import { showAddPaymentConfirmModal } from "../../../store/admin/payment_confirm";
+import {
+  fetchOrderNotConfirm,
+  setDateUser,
+  setUserId,
+  showAddPaymentConfirmModal,
+} from "../../../store/admin/payment_confirm";
+import ConfirmAction from "./confirm_action";
+import { Toaster, toast } from "sonner";
 
 const PaymentConfirmView = () => {
-  const initValue = useSelector(
+  const [uniqueUsers, setUniqueUsers] = useState([]);
+
+  const paymentConfirmData = useSelector(
     (state) => state.paymentConfirmStore.paymentConfirmData
   );
-  // const [paymentConfirm, setPaymentConfirm] = useState([...initValue]);
+
+  const toastValue = useSelector(
+    (state) => state.paymentConfirmStore.confirmToast
+  );
+
   const dispatch = useDispatch();
 
-  let noUrut = 0;
+  const successToast = () => {
+    toast.success("Success Confirm Payment", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
-  const modalAddPaymentConfirm = () => {
+  const errorToast = () => {
+    toast.error("Failed Confirm Payment", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  useEffect(() => {
+    if (toastValue === 1) {
+      successToast();
+    } else if (toastValue === 2) {
+      errorToast();
+    } else {
+    }
+  }, [toastValue]);
+
+  useEffect(() => {
+    dispatch(fetchOrderNotConfirm());
+  }, [dispatch]);
+
+  useEffect(() => {
+    const uniqueUserData = [];
+    const uniqueUserIds = new Set();
+
+    paymentConfirmData.forEach((payment) => {
+      const { user_id, order_date } = payment;
+      const uniqueKey = `${user_id}_${order_date}`;
+      if (!uniqueUserIds.has(uniqueKey)) {
+        uniqueUserIds.add(uniqueKey);
+        uniqueUserData.push(payment);
+      }
+    });
+
+    setUniqueUsers(uniqueUserData);
+  }, [paymentConfirmData]);
+
+  const modalAddPaymentConfirm = (userId, dateUser) => {
     dispatch(showAddPaymentConfirmModal());
+    dispatch(setUserId({ id: userId }));
+    dispatch(setDateUser({ date: dateUser }));
   };
 
   return (
     <div style={{ display: "flex" }}>
       <AdminSideBar />
       <ModalAddPaymentConfirm />
+      <ConfirmAction />
+      <Toaster />
       <div style={{ width: "100%" }}>
         <div
           style={{
@@ -59,46 +127,40 @@ const PaymentConfirmView = () => {
               </h2>
             </div>
 
-            <table className="table">
+            <Table striped bordered hover>
               <thead>
                 <tr>
-                  <th scope="col">Nomor</th>
-                  <th scope="col">payment Confirm ID</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Product Name</th>
-                  <th scope="col">Total Payment</th>
-                  <th scope="col">Advantages as a tip</th>
-                  <th scope="col">Action</th>
-                  <th></th>
+                  <th>Nomor</th>
+                  <th>Name</th>
+                  <th>Order Date</th>
+                  <th>Delivery Option</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {initValue.map((p) => {
-                  noUrut += 1;
-                  return (
-                    <tr key={p.payment_confirm_id}>
-                      <td>{noUrut}</td>
-                      <td>{p.payment_confirm_id}</td>
-                      <td>{p.name}</td>
-                      <td>{p.product_name}</td>
-                      <td>{p.total_payment}</td>
-                      <td>0</td>
-                      <td>
-                        <Button
-                          variant="primary"
-                          className="me-2"
-                          onClick={() => {
-                            modalAddPaymentConfirm();
-                          }}
-                        >
-                          Confirm
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {uniqueUsers.map((p, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>
+                      {p.first_name} {p.last_name}
+                    </td>
+                    <td>{p.order_date}</td>
+                    <td>{p.delivery_option}</td>
+                    <td>
+                      <Button
+                        variant="primary"
+                        className="me-2"
+                        onClick={() =>
+                          modalAddPaymentConfirm(p.user_id, p.order_date)
+                        }
+                      >
+                        Confirm
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
-            </table>
+            </Table>
           </div>
         </div>
       </div>

@@ -3,19 +3,20 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./ProductCard.css";
 import cake1 from "../../IMAGES/cake1.png";
-import { useDispatch } from "react-redux";
-import {
-  setAddCountProductData,
-  setMinCountProductData,
-} from "../../../store/customer/product_view";
 
-const ProductBestCard = ({ data, count, setCount }) => {
-  const dispatch = useDispatch();
+const ProductBestCard = ({ data }) => {
+  const [show, setshow] = useState(false);
+  const [count, setCount] = useState(1);
+
+  // const getproductid = () => {
+  //   alert(data.id)
+  // }
 
   const addtocart = () => {
     let cart = JSON.parse(localStorage.getItem("cart"));
     let productdata = data;
     if (cart) {
+      // alert('1 item is already added to cart')
       let itemincart = cart.find(
         (item) => item.productdata.ProductId === productdata.ProductId
       );
@@ -48,47 +49,52 @@ const ProductBestCard = ({ data, count, setCount }) => {
           quantity: count,
         },
       ];
+
+      // console.log(cart)
       localStorage.setItem("cart", JSON.stringify(cart));
     }
+    // setreloadnavbar(!reloadnavbar)
     window.location.reload();
+    // toast.success('Item added to cart')
   };
-
   return (
     <div className="product">
       <div className="s1">
         <img src={data.image == null ? cake1 : data.image} alt={"no img"} />
       </div>
       <div className="s2">
-        <h3>Rp. {data.price}</h3>
+        <h3>
+          Rp. {data.price}
+          {/* <span>Rp.{data.ProductPrice}.000</span> */}
+        </h3>
         <p>{data.name}</p>
       </div>
       <div className="s3">
         <p>{data.counttype}</p>
       </div>
-      {data.count > 0 ? (
+      {show ? (
         <div className="addbtn">
           <div className="qty">
             <button
               onClick={() => {
-                if (data.count > 0) {
-                  dispatch(setMinCountProductData({ id: data.product_id }));
+                if (count > 1) {
+                  setCount(count - 1);
                 }
               }}
-              style={{ color: "black" }}
             >
               -
             </button>
-            <p>{data.count}</p>
-            <button
-              onClick={() => {
-                dispatch(setAddCountProductData({ id: data.product_id }));
-              }}
-              style={{ color: "black" }}
-            >
-              +
-            </button>
+            <p>{count}</p>
+            <button onClick={() => setCount(count + 1)}>+</button>
           </div>
-          <button className="addtocart" onClick={addtocart}>
+          <button
+            className="addtocart"
+            onClick={() => {
+              setshow(false);
+              // setCount(1)
+              addtocart();
+            }}
+          >
             Add to cart
           </button>
         </div>
@@ -123,9 +129,7 @@ const ProductBestCard = ({ data, count, setCount }) => {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6"
-            onClick={() => {
-              dispatch(setAddCountProductData({ id: data.product_id }));
-            }}
+            onClick={() => setshow(true)}
           >
             <path
               strokeLinecap="round"
