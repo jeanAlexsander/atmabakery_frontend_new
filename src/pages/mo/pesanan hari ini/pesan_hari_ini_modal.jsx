@@ -5,6 +5,7 @@ import {
   hideModalTodaysOrder,
 } from "../../../store/mo/todays_orders";
 import { useEffect } from "react";
+import { URL } from "../../../../constants";
 
 const ModalPesananHariIni = () => {
   const show = useSelector((state) => state.todaysOrdersStore.modalTodaysOrder);
@@ -18,7 +19,27 @@ const ModalPesananHariIni = () => {
   };
   useEffect(() => {
     dispatch(fetchTodayOrderDetail(orderId));
-  }, []);
+  }, [dispatch, orderId]);
+
+  const handleAccept = async () => {
+    const inputDataUpdate = [...initValue];
+    try {
+      const response = await fetch(URL + "pencatatan-bahan-baku", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inputDataUpdate,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+    handleClose();
+  };
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -57,6 +78,9 @@ const ModalPesananHariIni = () => {
         <Modal.Footer>
           <Button variant="danger" onClick={handleClose}>
             Close
+          </Button>
+          <Button variant="success" onClick={handleAccept}>
+            Accept
           </Button>
         </Modal.Footer>
       </Modal>

@@ -12,7 +12,7 @@ const LaporanPenjualanBulananPerProductOwner = () => {
   let total = 0;
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchDataReportPerProduct(5));
+    dispatch(fetchDataReportPerProduct(1));
   }, []);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,

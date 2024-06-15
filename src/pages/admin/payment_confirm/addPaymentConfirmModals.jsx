@@ -101,6 +101,7 @@ function ModalAddPaymentConfirm() {
                 placeholder="enter price"
                 autoFocus
                 ref={priceRef}
+                disabled
               />
             </Form.Group>
           </Form>

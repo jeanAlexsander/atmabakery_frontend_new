@@ -57,6 +57,8 @@ const ModalPaymentOrderDetail = () => {
         formData.append("order_id", invoiceData.order_id);
         formData.append("amount", priceRef.current.value);
         formData.append("image", imageRef.current.files[0]);
+        formData.append("point", point);
+        formData.append("user_id", localStorage.getItem("user_id"));
         dispatch(confirmPayment(formData));
         dispatch(fetchPaymentOrderData());
         handleClose();

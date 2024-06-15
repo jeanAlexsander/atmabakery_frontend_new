@@ -66,7 +66,8 @@ const PesananHariIni = () => {
                           {e.first_name} {e.last_name}
                         </td>
                         <td>
-                          {e.order_date.slice(0, 10)} {e.order_date.slice(11, 19)}
+                          {e.order_date.slice(0, 10)}{" "}
+                          {e.order_date.slice(11, 19)}
                         </td>
                         <td>
                           <Button

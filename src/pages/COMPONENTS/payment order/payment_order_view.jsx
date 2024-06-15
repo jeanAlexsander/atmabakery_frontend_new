@@ -53,7 +53,7 @@ const PaymentOrderView = () => {
               <tr key={item.order_id}>
                 <td data-label="OrderID">{index + 1}</td>
                 <td data-label="OrderDate">{item.order_date}</td>
-                <td data-label="OrderDate">{item.total}</td>
+                <td data-label="TotalOrder">{item.total}</td>
                 <td data-label="Delivery Status">{item.delivery_fee}</td>
                 <td data-label="Total">{item.total + item.delivery_fee}</td>
                 <td data-label="Invoice">

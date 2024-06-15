@@ -111,12 +111,10 @@ function OrderDistanceDetail() {
                   <tr>
                     <td colSpan="2">Total Delivery</td>
                     <td></td>
-                    <td></td>
                     <td>{totalDelivery}</td>
                   </tr>
                   <tr>
                     <td colSpan="2">Total Price</td>
-                    <td></td>
                     <td></td>
                     <td>{allPrice + totalDelivery}</td>
                   </tr>

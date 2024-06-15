@@ -167,7 +167,7 @@ const RecipeAdminView = () => {
                           variant="danger"
                           className="btn-md"
                           onClick={() => {
-                            handleDelete(r.recipe_id);
+                            handleDelete(r.product_id);
                           }}
                         >
                           Delete
