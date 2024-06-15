@@ -3,14 +3,18 @@ import "./YourOrders.css";
 import { useEffect, useRef, useState } from "react";
 import { fetchistoryData } from "../../../store/customer/history";
 import Button from "react-bootstrap/Button";
+import {
+  fetchInvoiceData,
+  fetchOpenInvoiceData,
+  setOpenInvoiceData,
+} from "../../../store/customer/pick_up";
 
 const YourOrders = () => {
   const dispatch = useDispatch();
-  const initVaLue = useSelector((state) => state.historyStore.historyData);
+  const initVaLue = useSelector((state) => state.pickUpStore.invoiceData);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProduct, setFilteredProduct] = useState([]);
   const searchRef = useRef(null);
-  console.log(initVaLue);
 
   const filterProduk = () => {
     console.log("access");
@@ -21,8 +25,14 @@ const YourOrders = () => {
     setFilteredProduct(temp);
   };
 
+  const handleOpenInvoice = (data) => {
+    localStorage.setItem("order_id", data.order_id);
+    localStorage.setItem("order_date", data.order_date);
+    window.open("http://localhost:5173/print-invoice");
+  };
+
   useEffect(() => {
-    dispatch(fetchistoryData());
+    dispatch(fetchInvoiceData());
   }, []);
   return (
     <div className="yourorders">
@@ -49,10 +59,9 @@ const YourOrders = () => {
       <table className="yourorderstable">
         <tr>
           <th scope="col">Oder ID</th>
-          <th scope="col">Amout</th>
-          <th scope="col">Price</th>
-          <th scope="col">Name</th>
-          <th scope="col">Invoice</th>
+          <th scope="col">Order Date</th>
+          <th scope="col">Total</th>
+          <th scope="col">Action</th>
         </tr>
         <thead></thead>
 
@@ -60,16 +69,14 @@ const YourOrders = () => {
           {(searchTerm ? filteredProduct : initVaLue).map((item) => {
             return (
               <tr key={item.order_id}>
-                <td data-label="OrderID">{item.order_id}</td>
-                <td data-label="OrderDate">{item.amount}</td>
-                <td data-label="Delivery Status">{item.price}</td>
-                <td data-label="Total">{item.name}</td>
+                <td data-label="OrderID">24.05.{item.order_id}</td>
+                <td data-label="OrderDate">{item.order_date}</td>
+                <td data-label="Delivery Status">{item.total}</td>
                 <td data-label="Invoice">
                   <button
                     className="mainbutton1"
                     onClick={() => {
-                      setselectedorderid(item.id);
-                      setordersuccesscont(true);
+                      handleOpenInvoice(item);
                     }}
                   >
                     View

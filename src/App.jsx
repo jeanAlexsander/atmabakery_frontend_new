@@ -30,6 +30,22 @@ import DrinkPage from "./Product/DrinkPage/DrinkPage.jsx";
 import ConsignmentPage from "./Product/ConsignmentPage/ConsignmentPage.jsx";
 import ReadyStock from "./pages/HomePage/ready_stock.jsx";
 import Cart from "./pages/COMPONENTS/Cart/Cart.jsx";
+import PdfPrintView from "./pages/COMPONENTS/pick up/invoice_view.jsx";
+import LaporanPenjulananBulanan from "./pages/mo/laporan/laporan_penjualan_bulanan.jsx";
+import LaporanPenjualanBulananPerProduct from "./pages/mo/laporan/laporan_penjualan_per_product.jsx";
+import LaporanIngredients from "./pages/mo/laporan/laporan_ingredients.jsx";
+import LaporanIngredientPerPeriode from "./pages/mo/laporan/laporan_ingredient_per_periode.jsx";
+import LaporanPemasukanPengeluaran from "./pages/mo/laporan/Laporan_pemasukan_pengeluaran.jsx";
+import LaporanIngredientPerPeriodeOwner from "./pages/mo/laporan owner/laporan_ingredient_per_periode.jsx";
+import LaporanIngredientsOwner from "./pages/mo/laporan owner/laporan_ingredients.jsx";
+import LaporanPemasukanPengeluaranOwner from "./pages/mo/laporan owner/Laporan_pemasukan_pengeluaran.jsx";
+import LaporanPenjulananBulananOwner from "./pages/mo/laporan owner/laporan_penjualan_bulanan.jsx";
+import LaporanPenjualanBulananPerProductOwner from "./pages/mo/laporan owner/laporan_penjualan_per_product.jsx";
+import PesananHariIni from "./pages/mo/pesanan hari ini/pesanan_hari_ini.jsx";
+import EmployeeAttendanceAndSalaryReportsView from "./pages/mo/laporan/laporan_gaji.jsx";
+import EmployeeAttendanceAndSalaryReportsViewOwner from "./pages/mo/laporan owner/laporan_gaji.jsx";
+import UpdateOrderStatusView from "./pages/admin/update_order_status/updateOrderStatus.jsx";
+import LatePaymentView from "./pages/system/latepayment.jsx";
 const router = createBrowserRouter([
   {
     path: "/Login",
@@ -88,6 +104,14 @@ const router = createBrowserRouter([
     element: <PaymentConfirmView />,
   },
   {
+    path: "/admin/updateStatusOrderPage",
+    element: <UpdateOrderStatusView />,
+  },
+  {
+    path: "/admin/system",
+    element: <LatePaymentView />,
+  },
+  {
     path: "/mo",
     element: <PositionView />,
   },
@@ -112,8 +136,60 @@ const router = createBrowserRouter([
     element: <ConfirmOrderView />,
   },
   {
+    path: "/mo/report",
+    element: <LaporanPenjulananBulanan />,
+  },
+  {
+    path: "/mo/report-penjualan-per-product",
+    element: <LaporanPenjualanBulananPerProduct />,
+  },
+  {
+    path: "/mo/report-ingredient",
+    element: <LaporanIngredients />,
+  },
+  {
+    path: "/mo/report-ingredient-per-periode",
+    element: <LaporanIngredientPerPeriode />,
+  },
+  {
+    path: "/mo/report-gaji",
+    element: <EmployeeAttendanceAndSalaryReportsView />,
+  },
+  {
+    path: "/mo/pengeluaran-pemasukan",
+    element: <LaporanPemasukanPengeluaran />,
+  },
+  {
+    path: "/mo/pesanan-hari-ini",
+    element: <PesananHariIni />,
+  },
+  {
     path: "/owner",
     element: <SalaryView />,
+  },
+  {
+    path: "/owner/report",
+    element: <LaporanPenjulananBulananOwner />,
+  },
+  {
+    path: "/owner/report-penjualan-per-product",
+    element: <LaporanPenjualanBulananPerProductOwner />,
+  },
+  {
+    path: "/owner/report-ingredient",
+    element: <LaporanIngredientsOwner />,
+  },
+  {
+    path: "/owner/report-ingredient-per-periode",
+    element: <LaporanIngredientPerPeriodeOwner />,
+  },
+  {
+    path: "/owner/pengeluaran-pemasukan",
+    element: <LaporanPemasukanPengeluaranOwner />,
+  },
+  {
+    path: "/owner/report-gaji",
+    element: <EmployeeAttendanceAndSalaryReportsViewOwner />,
   },
   {
     path: "/customer",
@@ -146,6 +222,10 @@ const router = createBrowserRouter([
   {
     path: "/consignmentpage",
     element: <ConsignmentPage />,
+  },
+  {
+    path: "/print-invoice",
+    element: <PdfPrintView />,
   },
 ]);
 

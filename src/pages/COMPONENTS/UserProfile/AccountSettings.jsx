@@ -10,6 +10,8 @@ const AccountSettings = () => {
   const emailRef = useRef(null);
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
+  const [point, setPoint] = useState(0);
+  const [saldo, setSaldo] = useState(0);
   const firstname = localStorage.getItem("first_name");
   const lastname = localStorage.getItem("last_name");
   const email = localStorage.getItem("email");
@@ -26,6 +28,34 @@ const AccountSettings = () => {
       emailRef.current.value = email;
     }
   }, []);
+
+  useEffect(() => {
+    const fetchDaata = async () => {
+      try {
+        const response = await fetch(URL + "get-user-detail", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ user_id: localStorage.getItem("user_id") }),
+        });
+        const data = await response.json();
+        return data.data;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    const runData = async () => {
+      try {
+        const result = await fetchDaata();
+        setPoint(result.total_point);
+        setSaldo(result.saldo);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    runData();
+  });
 
   const editBtnHandler = () => {
     setIsEditable(!isEditable);
@@ -120,6 +150,28 @@ const AccountSettings = () => {
                 placeholder="Email"
                 ref={emailRef}
               />
+              <div className="d-flex gap-2">
+                <div className="col-6">
+                  <label htmlFor="firstname">Total Point</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    disabled
+                    name="firstname"
+                    placeholder={point}
+                  />
+                </div>
+                <div className="col-6">
+                  <label htmlFor="lastname">Total Saldo</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    disabled
+                    name="lastname"
+                    placeholder={saldo}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="d-flex justify-content-between mt-4">

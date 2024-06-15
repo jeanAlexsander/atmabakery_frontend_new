@@ -1,4 +1,5 @@
 import Button from "react-bootstrap/Button";
+import Pagination from "react-bootstrap/Pagination";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useRef, useEffect } from "react";
 import ModalAddIngredient from "./addIngredientModals";
@@ -21,6 +22,8 @@ const IngredientView = () => {
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredIngredient, setFilteredIngredients] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -34,8 +37,8 @@ const IngredientView = () => {
         i.unit.toLowerCase().includes(lowerCek) ||
         String(i.amount).includes(lowerCek)
     );
-    console.log(temp);
     setFilteredIngredients(temp);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -52,7 +55,6 @@ const IngredientView = () => {
   };
 
   const handleDelete = (id) => {
-    console.log(id);
     dispatch(setDeleteIngredientId({ id }));
     dispatch(showDeleteIngredientModal());
   };
@@ -61,6 +63,16 @@ const IngredientView = () => {
     dispatch(setEditIngredientData({ ingredient }));
     dispatch(showUpdateIngredientModal());
   };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = searchTerm
+    ? filteredIngredient.slice(indexOfFirstItem, indexOfLastItem)
+    : initValue.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalItems = searchTerm ? filteredIngredient.length : initValue.length;
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div style={{ display: "flex" }}>
@@ -135,7 +147,7 @@ const IngredientView = () => {
                 </tr>
               </thead>
               <tbody>
-                {(searchTerm ? filteredIngredient : initValue).map((i) => {
+                {currentItems.map((i) => {
                   noUrut += 1;
                   return (
                     <tr key={i.ingredient_id}>
@@ -169,6 +181,20 @@ const IngredientView = () => {
                 })}
               </tbody>
             </table>
+            <Pagination>
+              {Array.from(
+                { length: Math.ceil(totalItems / itemsPerPage) },
+                (_, index) => (
+                  <Pagination.Item
+                    key={index + 1}
+                    active={index + 1 === currentPage}
+                    onClick={() => paginate(index + 1)}
+                  >
+                    {index + 1}
+                  </Pagination.Item>
+                )
+              )}
+            </Pagination>
           </div>
         </div>
       </div>

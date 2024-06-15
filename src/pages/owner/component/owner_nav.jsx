@@ -43,6 +43,54 @@ const OwnerSideBar = () => {
                 Salary
               </CDBSidebarMenuItem>
             </NavLink>
+            <NavLink exact to="/owner/report" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="chart-line">Report</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/owner/report-gaji"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Report Absent
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/owner/report-penjualan-per-product"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Report Per Product
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/owner/report-ingredient"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Ingredient Report
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/owner/report-ingredient-per-periode"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Ingredient Report Per Periode
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/owner/pengeluaran-pemasukan"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Pengeluaran Pemasukan
+              </CDBSidebarMenuItem>
+            </NavLink>
           </CDBSidebarMenu>
         </CDBSidebarContent>
 

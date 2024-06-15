@@ -70,6 +70,59 @@ const MOSideBar = () => {
                 Confirm Order
               </CDBSidebarMenuItem>
             </NavLink>
+            <NavLink
+              exact
+              to="/mo/pesanan-hari-ini"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Product Hari Ini
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink exact to="/mo/report" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="chart-line">Report</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/mo/report-penjualan-per-product"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Report Per Product
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/mo/report-ingredient"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Ingredient Report
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/mo/report-ingredient-per-periode"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Ingredient Report Per Periode
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink exact to="/mo/report-gaji" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="chart-line">
+                Report Absent Employee
+              </CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/mo/pengeluaran-pemasukan"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Pengeluaran Pemasukan
+              </CDBSidebarMenuItem>
+            </NavLink>
           </CDBSidebarMenu>
         </CDBSidebarContent>
 

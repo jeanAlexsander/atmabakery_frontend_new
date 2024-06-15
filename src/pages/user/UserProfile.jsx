@@ -13,6 +13,8 @@ import UserAddress from "../../pages/COMPONENTS/UserProfile/UserAddress";
 import LegalNotice from "../../pages/COMPONENTS/UserProfile/LegalNotice";
 import { useSelector } from "react-redux";
 import PaymentOrderView from "../COMPONENTS/payment order/payment_order_view";
+import PickUpView from "../COMPONENTS/pick up/pick_up_view";
+import ConfirmationReceiptView from "../COMPONENTS/UserProfile/confirmationReceipt";
 
 const UserProfile = () => {
   const indexVal = useSelector((state) => state.userViewSlice.indexVal);
@@ -34,6 +36,8 @@ const UserProfile = () => {
           {indexVal === 4 && <UserAddress />}
           {indexVal === 5 && <LegalNotice />}
           {indexVal === 6 && <PaymentOrderView />}
+          {indexVal === 7 && <PickUpView />}
+          {indexVal == 8 && <ConfirmationReceiptView />}
         </div>
       </div>
 

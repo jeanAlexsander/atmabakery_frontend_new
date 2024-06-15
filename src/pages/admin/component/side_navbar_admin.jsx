@@ -95,6 +95,18 @@ const AdminSideBar = () => {
                 Confrim Payment
               </CDBSidebarMenuItem>
             </NavLink>
+            <NavLink exact to="/admin/system" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="chart-line">system</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink
+              exact
+              to="/admin/updateStatusOrderPage"
+              activeClassName="activeClicked"
+            >
+              <CDBSidebarMenuItem icon="chart-line">
+                Update Status Order
+              </CDBSidebarMenuItem>
+            </NavLink>
             <NavLink
               exact
               to="/admin/changepassword"

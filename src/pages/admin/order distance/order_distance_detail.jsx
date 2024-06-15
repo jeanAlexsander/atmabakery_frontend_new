@@ -64,7 +64,7 @@ function OrderDistanceDetail() {
   const handleSave = () => {
     dispatch(setConfirmActionData({ data: filterData }));
     dispatch(showConfirmActionModal());
-    const totalDeliveryR = totalDelivery / 10;
+    const totalDeliveryR = totalDelivery;
     dispatch(confirmDistanceOrder(filterData, totalDeliveryR));
     dispatch(fetchConfirmDistance());
     handleClose();
@@ -118,7 +118,7 @@ function OrderDistanceDetail() {
                     <td colSpan="2">Total Price</td>
                     <td></td>
                     <td></td>
-                    <td>{allPrice + totalDelivery / 10}</td>
+                    <td>{allPrice + totalDelivery}</td>
                   </tr>
                 </tbody>
               </Table>

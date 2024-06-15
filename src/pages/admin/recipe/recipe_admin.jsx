@@ -2,6 +2,7 @@ import AdminSideBar from "../component/side_navbar_admin";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
+import Pagination from "react-bootstrap/Pagination";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useRef, useEffect } from "react";
 import ModalAddRecipe from "./addRecipeModals";
@@ -14,13 +15,15 @@ import {
   showDeleteRecipeModal,
   fetchRecipesData,
   setDeleteRecipeId,
-  setEditRecipeData
+  setEditRecipeData,
 } from "../../../store/admin/recipe";
 
 const RecipeAdminView = () => {
   const initValue = useSelector((state) => state.recipeStore.recipeData);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredRecipe, setFilteredRecipes] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(3);
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -30,11 +33,11 @@ const RecipeAdminView = () => {
     var lowerCek = searchTerm.toLowerCase();
     const temp = initValue.filter(
       (r) =>
-        r.product_name.toLowerCase().includes(lowerCek) ||
+        r.name.toLowerCase().includes(lowerCek) ||
         r.deskripsi.toLowerCase().includes(lowerCek)
     );
-    console.log(temp)
     setFilteredRecipes(temp);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -51,15 +54,24 @@ const RecipeAdminView = () => {
   };
 
   const handleDelete = (id) => {
-    console.log(id)
     dispatch(setDeleteRecipeId({ id }));
     dispatch(showDeleteRecipeModal());
   };
 
   const handleEdit = (recipe) => {
-    dispatch(setEditRecipeData({ recipe }))
-    dispatch(showUpdateRecipeModal())
+    dispatch(setEditRecipeData({ recipe }));
+    dispatch(showUpdateRecipeModal());
   };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = searchTerm
+    ? filteredRecipe.slice(indexOfFirstItem, indexOfLastItem)
+    : initValue.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalItems = searchTerm ? filteredRecipe.length : initValue.length;
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div style={{ display: "flex" }}>
@@ -96,11 +108,7 @@ const RecipeAdminView = () => {
               ref={searchRef}
               onChange={(r) => setSearchTerm(r.target.value)}
             />
-            <Button
-              variant="danger"
-              className="mb-2"
-              onClick={handleSearch}
-            >
+            <Button variant="danger" className="mb-2" onClick={handleSearch}>
               Search
             </Button>
           </div>
@@ -137,13 +145,13 @@ const RecipeAdminView = () => {
                 </tr>
               </thead>
               <tbody>
-                {(searchTerm ? filteredRecipe : initValue).map((r) => {
-                  noUrut += 1
+                {currentItems.map((r) => {
+                  noUrut += 1;
                   return (
                     <tr key={r.recipe_id}>
                       <td>{noUrut}</td>
-                      <td>{r.recipe_id}</td>
-                      <td>{r.product_name}</td>
+                      <td>{r.product_id}</td>
+                      <td>{r.name}</td>
                       <td>{r.deskripsi}</td>
                       <td>
                         <Button
@@ -170,6 +178,20 @@ const RecipeAdminView = () => {
                 })}
               </tbody>
             </table>
+            <Pagination>
+              {Array.from(
+                { length: Math.ceil(totalItems / itemsPerPage) },
+                (_, index) => (
+                  <Pagination.Item
+                    key={index + 1}
+                    active={index + 1 === currentPage}
+                    onClick={() => paginate(index + 1)}
+                  >
+                    {index + 1}
+                  </Pagination.Item>
+                )
+              )}
+            </Pagination>
           </div>
         </div>
       </div>

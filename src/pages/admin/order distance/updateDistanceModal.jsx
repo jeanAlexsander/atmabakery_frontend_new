@@ -59,10 +59,10 @@ function UpdateDistanceModal() {
               <Form.Label>Address</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Rumah Jean"
+                placeholder="Jl Babarsari no 11"
                 autoFocus
                 disabled
-                value="Rumah Jean"
+                value="Jl Babarsari no 11"
               />
             </Form.Group>
           </Form>

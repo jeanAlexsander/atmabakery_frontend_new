@@ -8,7 +8,7 @@ import {
   setCancelDetailOrderData,
 } from "../../../store/customer/payment_order";
 import { Button, Form, Modal, Table } from "react-bootstrap";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const ModalPaymentOrderDetail = () => {
   const dispatch = useDispatch();
@@ -25,6 +25,15 @@ const ModalPaymentOrderDetail = () => {
 
   const [priceError, setPriceError] = useState("");
   const [imageError, setImageError] = useState("");
+  const totalTemp = invoiceData.total + invoiceData.delivery_fee;
+  const [totalPayment, setTotalPayment] = useState(0);
+
+  useEffect(() => {
+    setTotalPayment(totalTemp);
+  }, [totalTemp]);
+
+  const availablePoint = localStorage.getItem("total_point");
+  const [point, setPoint] = useState(localStorage.getItem("total_point"));
 
   const priceRef = useRef(null);
   const imageRef = useRef(null);
@@ -37,12 +46,13 @@ const ModalPaymentOrderDetail = () => {
     dispatch(hideModalDetail());
     dispatch(setCancelDetailOrderData());
     dispatch(setCancelDetailInvoiceData());
+    dispatch(fetchPaymentOrderData());
   };
   const handleSave = () => {
     const totalPrice = invoiceData.total + invoiceData.delivery_fee;
 
     if (priceRef.current.value && imageRef.current.value) {
-      if (parseInt(priceRef.current.value) >= totalPrice) {
+      if (parseInt(priceRef.current.value) >= totalPayment) {
         const formData = new FormData();
         formData.append("order_id", invoiceData.order_id);
         formData.append("amount", priceRef.current.value);
@@ -90,7 +100,7 @@ const ModalPaymentOrderDetail = () => {
               <Table striped bordered hover>
                 <thead>
                   <tr>
-                    <th>Nomor</th>
+                    <th>No</th>
                     <th>Product Name</th>
                     <th>Quantity</th>
                   </tr>
@@ -106,7 +116,39 @@ const ModalPaymentOrderDetail = () => {
                   <tr>
                     <td>Total Price</td>
                     <td></td>
-                    <td>{invoiceData.total + invoiceData.delivery_fee}</td>
+                    <td>{totalPayment}</td>
+                  </tr>
+                  <tr>
+                    <td>Available Point</td>
+                    <td></td>
+                    <td>{point}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td rowSpan={2}>
+                      <Button
+                        variant="success"
+                        onClick={() => {
+                          setTotalPayment(totalTemp - point * 100);
+                          setPoint(0);
+                        }}
+                        disabled={point === 0}
+                      >
+                        Use Point
+                      </Button>
+                    </td>
+                    <td rowSpan={2}>
+                      <Button
+                        variant="danger"
+                        onClick={() => {
+                          setTotalPayment(totalTemp);
+                          setPoint(availablePoint);
+                        }}
+                        disabled={point === availablePoint}
+                      >
+                        Cancel
+                      </Button>
+                    </td>
                   </tr>
                 </tbody>
               </Table>
@@ -133,7 +175,7 @@ const ModalPaymentOrderDetail = () => {
               </span>
             </div>
             <div className="custom-file">
-              <Form.Label>Hampers Image</Form.Label>
+              <Form.Label>Payment Proof</Form.Label>
               <input
                 type="file"
                 className="custom-file-input"

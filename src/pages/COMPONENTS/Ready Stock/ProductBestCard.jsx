@@ -63,6 +63,7 @@ const ProductBestCard = ({ data }) => {
         <img src={data.image == null ? cake1 : data.image} alt={"no img"} />
       </div>
       <div className="s2">
+        <h3>Stock : {data.quantity}</h3>
         <h3>
           Rp. {data.price}
           {/* <span>Rp.{data.ProductPrice}.000</span> */}

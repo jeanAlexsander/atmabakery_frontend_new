@@ -21,6 +21,12 @@ import paymentConfirmSlice from "./admin/payment_confirm";
 import confirmOrderSlice from "./mo/confirm_order";
 import productViewSlice from "./customer/product_view";
 import paymentOrderSlice from "./customer/payment_order";
+import pickUpSlice from "./customer/pick_up";
+import reportSlice from "./mo/report";
+import todaysOrderSlice from "./mo/todays_orders";
+import statusOrderSlice from "./admin/update_status_order";
+import confirmationReceiptSlice from "./customer/confirmationReceipt";
+import latepaymentSlice from "./system/latepayment";
 
 export const store = configureStore({
     reducer: {
@@ -44,6 +50,12 @@ export const store = configureStore({
         paymentConfirmStore: paymentConfirmSlice.reducer,
         confirmOrderStore: confirmOrderSlice.reducer,
         productDataViewStore: productViewSlice.reducer,
-        paymentOrderCustomerStore: paymentOrderSlice.reducer
+        paymentOrderCustomerStore: paymentOrderSlice.reducer,
+        pickUpStore : pickUpSlice.reducer,
+        reportStore: reportSlice.reducer,
+        todaysOrdersStore: todaysOrderSlice.reducer,
+        statusOrderStore: statusOrderSlice.reducer,
+        confirmationReceiptStore: confirmationReceiptSlice.reducer,
+        latepaymentStore: latepaymentSlice.reducer
     }
 });
